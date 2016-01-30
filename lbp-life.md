@@ -12,7 +12,7 @@ Fill this in when it really matters.
 
 * 3 - 6 players (?)
 
-* 48 board spaces (?)
+* 36 board spaces (?)
 
 # Card counts
 
@@ -78,7 +78,7 @@ Willie?
 
 * **Golfing Through Fire**: Once again, the annual golf tournament, which was supposed to begin by 10, didn't actually begin until noon.  Lose a turn while suffering from subsequent dehydration, unless you actually played and enjoyed golf this trip, in which case take a drink of WATER to roll again.
 
-* **Spades For Days**: The spades games have been more interesting than usual this year, resulting in your not having enough money for the buy-in for the poker tournament (or gas money to get home).  Lose a turn in order to determine what body part to auction off to pay your debts, unless you're playing as Nick, in which case smile wryly and roll again.
+* **Spades For Days**: The spades games have been more interesting and slightly less friendly than usual this year, resulting in your not having enough money for the buy-in for the poker tournament (or for gas money to get home).  Lose a turn in order to determine what body part to auction off to pay your debts, unless you're playing as Nick, in which case smile wryly and roll again.
 
 * **Lack of Reading Material**: You typically use your time at LBP to read as well as catch up with old friends.  This year, inexplicably, you neglected to pack your book bag.  If you're playing as Rusty, lose a turn searching the house for something worth reading, unless there is alternate reading material (the kind with pictures) within arm's reach, in which case show your favorite to everyone playing and roll again.
 
@@ -86,7 +86,9 @@ Willie?
 
 * **Sleeping Arrangements**: While you thought you would beat the LBP traffic this year by arriving at noon on Thursday, it turns out everyone else spent Wednesday night in Chase's back yard and got there before you.  Lose a turn trying to figure out where you're going to sleep, unless you're playing as Garner, in which case demonstrate that you can sleep anywhere by pulling any two objects of similar height together and planking on them, and then roll again.
 
-* boating
+* **I'm (Not) On A Boat!**: While out on the lake, you decide to get out of the water to pee for some reason.  While relieving yourself, the boats (because there are two) departing, both thinking that you're on the other one. Lose a turn hitchhiking back to the cabin unless you can spin an entertaining tale of how you beat the boats back (simple majority rules), in which case roll again.
+
+* **Cheetos And Strife**: You go looking for two LBP snack staples: cheetos and beer.  Unfortunately, someone has consumed the last of both without notifying the authorities, and you begin to exhibit withdrawal symptoms. Lose a turn making a store run unless you've actually made a store run this LBP, in which case you convince someone else to go and roll again.
 
 * tournament
 
@@ -95,3 +97,5 @@ Willie?
 * drum machine (keith?)
 
 * weight gain challenge/meat sweats
+
+* NRNS
