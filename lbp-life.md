@@ -1,21 +1,37 @@
 # Card counts
 
 Tony: 1
+
 Chase: 1
+
 Sam: 1
+
 Keith: 1
+
 Phil: 2
+
 Bill: 2
+
 Curtis: 1
+
 Tai: 1
+
 Nick:
+
 Garner:
+
 Todd: 1
+
 Damon: 1
+
 Rusty:
+
 Po:
+
 Dan:
+
 Joey:
+
 
 # Cards
 
