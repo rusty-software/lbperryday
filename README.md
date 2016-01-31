@@ -47,7 +47,7 @@ This will effectively merge the head of the master branch into the gh-pages bran
 This will produce the correct artifacts on the branch.  The last thing to do is copy the artifacts to the right spot and push the branch back to github.
 
     cp resources/public/js/compiled/lbperryday.js js/compiled/
-    git commit -a "Publishing update"
+    git commit -am "Publishing update"
     git push
 
 ## License
