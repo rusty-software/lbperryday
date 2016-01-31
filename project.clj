@@ -24,9 +24,9 @@
                 :source-paths ["src"]
 
                 ;; If no code is to be run, set :figwheel true for continued automagical reloading
-                :figwheel {:on-jsload "lbperryday.core/on-js-reload"}
+                :figwheel {:on-jsload "lbperryday.main/on-js-reload"}
 
-                :compiler {:main lbperryday.core
+                :compiler {:main lbperryday.main
                            :asset-path "js/compiled/out"
                            :output-to "resources/public/js/compiled/lbperryday.js"
                            :output-dir "resources/public/js/compiled/out"
@@ -37,7 +37,7 @@
                {:id "min"
                 :source-paths ["src"]
                 :compiler {:output-to "resources/public/js/compiled/lbperryday.js"
-                           :main lbperryday.core
+                           :main lbperryday.main
                            :optimizations :advanced
                            :pretty-print false}}]}
 

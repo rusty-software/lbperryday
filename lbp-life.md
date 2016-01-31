@@ -6,7 +6,7 @@
 
 * Roll to see who goes first, or negotiate, arm or indian leg wrestle, or otherwise figure it out amongst yourselves.  Play proceeds to the left.
 
-* Participants that are the main object of a card get to move forward a space at the end of the turn on which the card is played.
+* Participants that are the main object of a card get to move forward a space at the end of the turn on which the card is played (if not playing as themselves).
 
 * There should be 2 - 6 players (?)
 
