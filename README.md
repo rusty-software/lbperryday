@@ -4,7 +4,7 @@ A video game about how to live LBPERRYDAY
 
 ## Overview
 
-This might very well be the best vidya game ever.  Play the game by visiting http://rusty-software.github.io/lbperryday/
+This might very well be the best vidya game ever.  Play the game by visiting [rusty-software.github.io/lbperryday/](http://rusty-software.github.io/lbperryday/)
 
 ## Development Details
 
