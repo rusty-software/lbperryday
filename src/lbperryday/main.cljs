@@ -36,7 +36,8 @@
   ([side-color dots]
    ^{:key side-color}
    [:svg
-    {:width 100
+    {:class "side"
+     :width 100
      :height 100}
     [:rect
      {:width 74
@@ -55,17 +56,20 @@
 (defn main-view []
   [:center
    [:h1 "LBPERRYDAY!"]
-   [:div
+   #_[:div
     {:id "dice-side-display"}
     (for [side-spec (vals dice-sides)]
       (dice-side side-spec))]
 
    [:div
-    {:id "dice-roll-area"
-     :on-click (fn [e]
-                 (roll-dice!))}
-    "make the dice appear as a cube"
-    ]])
+     {:id "dice-roll-area"
+      :on-click (fn [e]
+                  (roll-dice!))}
+     [:div
+      {:id "dice-cube"
+       :style {:transform (str " rotateX(" 145 "deg) rotateY(" -45 "deg) rotateZ(" 0 "deg)")}}
+      (for [side-spec (vals dice-sides)]
+        (dice-side side-spec))]]])
 
 (defn ^:export main []
   (when-let [app (. js/document (getElementById "app"))]

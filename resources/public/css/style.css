@@ -1,2 +1,84 @@
-/* some style */
-
+body {
+  margin: 0;
+  padding: 0;
+  background: slategray;
+}
+svg {
+  display: block;
+  margin: auto;
+  -webkit-transform-origin: top center;
+  -webkit-transform: scale(1.5);
+  -moz-transform-origin: top center;
+  -moz-transform: scale(1.5);
+}
+.hit-area {
+  cursor: pointer;
+}
+#dice-roll-area {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 125px;
+  height: 125px;
+  cursor: pointer;
+}
+#dice-cube {
+  position: absolute;
+  left: 25px;
+  top: 25px;
+  width: 74px;
+  height: 74px;
+  z-index: 100;
+  backface-visibility: visible;
+  pointer-events: none;
+  -webkit-transform-style: preserve-3d;
+  -webkit-transform-origin: center center;
+  -webkit-backface-visibility: visible;
+  -webkit-transform: rotateX(-45deg) rotateY(50deg);
+  -webkit-transition: -webkit-transform 1s;
+  -moz-transform-style: preserve-3d;
+  -moz-transform-origin: center center;
+  -moz-backface-visibility: visible;
+  -moz-transform: rotateX(-45deg) rotateY(50deg);
+  -moz-transition: -moz-transform 1s;
+}
+.side {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 74px;
+  height: 74px;
+  pointer-events: none;
+  backface-visibility: visible;
+  -webkit-transform-origin: center center;
+  -webkit-backface-visibility: visible;
+  -moz-transform-origin: center center;
+  -moz-backface-visibility: visible;
+}
+.side * {
+  pointer-events: none;
+}
+#dice-cube .side:nth-child(1) {
+  -webkit-transform: translateY(37px) rotateX(90deg);
+  -moz-transform: translateY(37px) rotateX(90deg);
+}
+#dice-cube .side:nth-child(2) {
+  -webkit-transform: translateY(-37px) rotateX(-90deg);
+  -moz-transform: translateY(-37px) rotateX(-90deg);
+}
+#dice-cube .side:nth-child(3) {
+  -webkit-transform: translateX(37px) rotateY(-90deg);
+  -moz-transform: translateX(37px) rotateY(-90deg);
+}
+#dice-cube .side:nth-child(4) {
+  -webkit-transform: translateX(-37px) rotateY(-90deg);
+  -moz-transform: translateX(-37px) rotateY(-90deg);
+}
+#dice-cube .side:nth-child(5) {
+  -webkit-transform: translateZ(37px) rotateZ(90deg);
+  -moz-transform: translateZ(37px) rotateZ(90deg);
+}
+#dice-cube .side:nth-child(6) {
+  -webkit-transform: translateZ(-37px) rotateZ(0deg);
+  -moz-transform: translateZ(-37px) rotateZ(0deg);
+}
