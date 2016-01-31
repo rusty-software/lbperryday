@@ -3,34 +3,55 @@
 
 (enable-console-print!)
 
-;; define your app data so that it doesn't get over-written on reload
+(def dice-specs
+  [{:color "cadetblue"
+    :dots [{:x 37 :y 37}]
+    :val 1
+    :transform {:rx 145 :ry -45 :rz 0}}
+   {:color "coral"
+    :dots [{:x 14.25 :y 57.5}
+           {:x 56.75 :y 16.5}]
+    :val 2
+    :transform {:rx -45 :ry 50 :rz 0}}
+   {:color "cornflowerblue"
+    :dots [{:x 14.25 :y 57.5}
+           {:x 37 :y 37}
+           {:x 56.75 :y 16.5}]
+    :val 3
+    :transform {:rx -45 :ry 225 :rz -90}}
+   {:color "darkkhaki"
+    :dots [{:x 14.27 :y 16.5}
+           {:x 14.25 :y 57.5}
+           {:x 56.75 :y 16.5}
+           {:x 56.75 :y 57.5}]
+    :val 4
+    :transform {:rx -45 :ry 50 :rz 90}}
+   {:color "darkslateblue"
+    :dots [{:x 14.27 :y 16.5}
+           {:x 14.25 :y 57.5}
+           {:x 37 :y 37}
+           {:x 56.75 :y 16.5}
+           {:x 56.75 :y 57.5}]
+    :val 5
+    :transform {:rx 50 :ry 0 :rz 50}}
+   {:color "brown"
+    :dots [{:x 14.27 :y 16.5}
+           {:x 14.27 :y 37}
+           {:x 14.25 :y 57.5}
+           {:x 56.75 :y 16.5}
+           {:x 56.75 :y 37}
+           {:x 56.75 :y 57.5}]
+    :val 6
+    :transform {:rx 45 :ry 180 :rz -45}}])
 
-(defonce app-state (atom nil))
+(defonce app-state (atom (first dice-specs)))
 
 (defn roll-dice! []
-  (println "roll-dice! needs an implementation..."))
+  (let [roll (rand-int 6)]
+    (reset! app-state (assoc @app-state :current-dice (get dice-specs roll)))))
 
-(def dice-sides {:one {:color "cadetblue" :dots [{:x 37 :y 37}]}
-                 :two {:color "coral" :dots [{:x 14.25 :y 57.5}
-                                           {:x 56.75 :y 16.5}]}
-                 :three {:color "cornflowerblue" :dots [{:x 14.25 :y 57.5}
-                                                        {:x 37 :y 37}
-                                                        {:x 56.75 :y 16.5}]}
-                 :four {:color "darkkhaki" :dots [{:x 14.27 :y 16.5}
-                                                  {:x 14.25 :y 57.5}
-                                                  {:x 56.75 :y 16.5}
-                                                  {:x 56.75 :y 57.5}]}
-                 :five {:color "darkslateblue" :dots [{:x 14.27 :y 16.5}
-                                                      {:x 14.25 :y 57.5}
-                                                      {:x 37 :y 37}
-                                                      {:x 56.75 :y 16.5}
-                                                      {:x 56.75 :y 57.5}]}
-                 :six {:color "brown" :dots [{:x 14.27 :y 16.5}
-                                             {:x 14.27 :y 37}
-                                             {:x 14.25 :y 57.5}
-                                             {:x 56.75 :y 16.5}
-                                             {:x 56.75 :y 37}
-                                             {:x 56.75 :y 57.5}]}})
+(defn current-dice-transform [key]
+  (get-in @app-state [:current-dice :transform key]))
 
 (defn dice-side
   ([side-color dots]
@@ -58,7 +79,7 @@
    [:h1 "LBPERRYDAY!"]
    #_[:div
     {:id "dice-side-display"}
-    (for [side-spec (vals dice-sides)]
+    (for [side-spec (vals dice-specs)]
       (dice-side side-spec))]
 
    [:div
@@ -67,8 +88,14 @@
                   (roll-dice!))}
      [:div
       {:id "dice-cube"
-       :style {:transform (str " rotateX(" 145 "deg) rotateY(" -45 "deg) rotateZ(" 0 "deg)")}}
-      (for [side-spec (vals dice-sides)]
+       :style {:transform (str " rotateX("
+                               (current-dice-transform :rx)
+                               "deg) rotateY("
+                               (current-dice-transform :ry)
+                               "deg) rotateZ("
+                               (current-dice-transform :rz)
+                               "deg)")}}
+      (for [side-spec dice-specs]
         (dice-side side-spec))]]])
 
 (defn ^:export main []
