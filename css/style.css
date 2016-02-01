@@ -22,6 +22,15 @@ svg {
   height: 125px;
   cursor: pointer;
 }
+#dice-result {
+  position: absolute;
+  top: 225px;
+  left: 70px;
+  width: 200px;
+  height: 165px;
+  border: 1px solid;
+  overflow: auto;
+}
 #dice-cube {
   position: absolute;
   left: 25px;
