@@ -162,11 +162,17 @@
 (def board-dimensions {:width 700
                        :height 420})
 
+(defn player-name-click [e]
+  (println "player-name-click:" e))
+
+(defn player-name-release [e]
+  (println "player-name-release:" e))
+
 (defn game-board []
   [:div
    {:id "game-board-area"}
    [:svg
-    {:view-box (str "0 0 " (:width board-dimensions) (:height board-dimensions))
+    {:view-box (str "0 0 " (:width board-dimensions) " " (:height board-dimensions))
      :width (:width board-dimensions)
      :height (:height board-dimensions)}
     [:rect
@@ -176,7 +182,20 @@
       :height (:height board-dimensions)
       :stroke "Black"
       :stroke-width "0.5"
-      :fill (rand-nth colors/game-board-colors)}]]])
+      :fill "DarkSeaGreen"}]
+    [:text
+     {:x 50
+      :y 50
+      :font-size "smaller"
+      :on-mouse-down (fn [e]
+                       (player-name-click e))
+      :on-mouse-up (fn [e]
+                     (player-name-release e))}
+     "Player 1"]
+    [:text
+     {:x 120
+      :y 120}
+     "Player 2"]]])
 
 (defn main-view []
   [:center
