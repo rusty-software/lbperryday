@@ -1,6 +1,8 @@
-(ns lbperryday.components)
+(ns lbperryday.components
+  (:require [goog.events :as events])
+  (:import [goog.events EventType]))
 
-(def text-defaults)
+(def text-defaults {:font-size "smaller"})
 
 (defn drag-move-fn [on-drag]
   (fn [evt]
@@ -23,4 +25,10 @@
      (events/listen js/window EventType.MOUSEMOVE drag-move)
      (events/listen js/window EventType.MOUSEUP drag-end))))
 
-
+(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
+  [:text
+   (merge text-defaults
+          {:on-mouse-down #(dragging on-drag)
+           :x x
+           :y y})
+   name])

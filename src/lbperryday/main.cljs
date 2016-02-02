@@ -1,9 +1,12 @@
 (ns lbperryday.main
   (:require [reagent.core :as reagent :refer [atom]]
             [clojure.string :as str]
-            [lbperryday.html-colors :as colors]))
+            [lbperryday.html-colors :as colors]
+            [lbperryday.components :as c]))
 
 (enable-console-print!)
+(defn not-implemented [function-name]
+  (println function-name "is not implemented!"))
 
 (def dice-specs
   [{:color (get colors/dice-colors 0)
@@ -123,7 +126,7 @@
   (swap! app-state next-player))
 
 (defn draw-card! []
-  (println "draw-card! not implemented!"))
+  (not-implemented "draw-card!"))
 
 (defn current-dice-transform [key]
   (get-in @app-state [:current-dice :transform key]))
@@ -162,11 +165,8 @@
 (def board-dimensions {:width 700
                        :height 420})
 
-(defn player-name-click [e]
-  (println "player-name-click:" e))
-
-(defn player-name-release [e]
-  (println "player-name-release:" e))
+(defn move-name [svg-root n]
+  (not-implemented "move-name"))
 
 (defn game-board []
   [:div
@@ -183,19 +183,8 @@
       :stroke "Black"
       :stroke-width "0.5"
       :fill "DarkSeaGreen"}]
-    [:text
-     {:x 50
-      :y 50
-      :font-size "smaller"
-      :on-mouse-down (fn [e]
-                       (player-name-click e))
-      :on-mouse-up (fn [e]
-                     (player-name-release e))}
-     "Player 1"]
-    [:text
-     {:x 120
-      :y 120}
-     "Player 2"]]])
+    (c/player-name {:on-drag (move-name nil nil)} {:x 50 :y 50 :name "Player 1"})
+    (c/player-name {:on-drag (move-name nil nil)} {:x 120 :y 120 :name "Player 2"})]])
 
 (defn main-view []
   [:center
@@ -245,7 +234,7 @@
        {:id "btn-draw-card"
         :style {:margin-right 2}
         :class "btn btn-success"
-        :on-clikc #(draw-card!)}
+        :on-click #(draw-card!)}
        "Draw Card"]
       [:button
        {:id "btn-end-turn"
