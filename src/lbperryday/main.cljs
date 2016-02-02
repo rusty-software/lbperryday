@@ -121,6 +121,9 @@
 (defn next-player! []
   (swap! app-state next-player))
 
+(defn draw-card! []
+  (println "draw-card! not implemented!"))
+
 (defn current-dice-transform [key]
   (get-in @app-state [:current-dice :transform key]))
 
@@ -165,11 +168,13 @@
      {:class "row"}
      [:input
       {:id "txt-player-name"
+       :style {:margin-right 2}
        :type "text"
        :value (:add-player-name @app-state)
        :on-change #(update-player-name! (-> % .-target .-value))}]
      [:button
       {:id "btn-add-player"
+       :style {:margin-right 2}
        :class "btn btn-primary"
        :on-click #(add-player!)}
       "Add Player"]
@@ -190,17 +195,28 @@
    [:div
     {:id "buttons"
      :class (shown-during-game)}
-    [:text (str (current-player @app-state) ", it's your turn.")]
-    [:button
-     {:id "btn-end-turn"
-      :class "btn"
-      :on-click #(next-player!)}
-     "End Turn"]
-    [:button
-     {:id "btn-end-game"
-      :class "btn btn-danger"
-      :on-click #(reset-game!)}
-     "Punt On This Shitty Game!"]
+    [:div
+     {:class "row"}
+     (str (current-player @app-state) ", it's your turn.")]
+    [:div
+     {:class "row"}
+     [:button
+      {:id "btn-draw-card"
+       :style {:margin-right 2}
+       :class "btn btn-success"
+       :on-clikc #(draw-card!)}
+      "Draw Card"]
+     [:button
+      {:id "btn-end-turn"
+       :style {:margin-right 2}
+       :class "btn btn-warning"
+       :on-click #(next-player!)}
+      "End Turn"]
+     [:button
+      {:id "btn-end-game"
+       :class "btn btn-danger"
+       :on-click #(reset-game!)}
+      "Punt On This Shitty Game!"]]
     ]
 
    [:div
