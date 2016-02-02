@@ -1,5 +1,6 @@
 (ns lbperryday.main
-  (:require [reagent.core :as reagent :refer [atom]]))
+  (:require [reagent.core :as reagent :refer [atom]]
+            [clojure.string :as str]))
 
 (enable-console-print!)
 
@@ -52,27 +53,20 @@
                   :transform {:rx 0 :ry 0 :rz 0}}
    :roll-history []
    :game-on? true
-   :players {:player1 ""
-             :player2 ""
-             :player3 ""
-             :player4 ""
-             :player5 ""
-             :player6 ""}
+   :players ["" "" ""]
    :current-player ""})
 
 (defonce app-state (atom {:current-dice (first dice-specs)
                           :roll-history []
-                          :players {:player1 nil
-                                    :player2 nil
-                                    :player3 nil
-                                    :player4 nil
-                                    :player5 nil
-                                    :player6 nil}
-                          :current-player nil
+                          :add-player-name nil
+                          :players []
                           :game-on? false}))
 
+(defn current-player [game-state]
+  (first (:player-cycle game-state)))
+
 (defn roll-history-row [roll]
-  (let [current-player (or (:current-player @app-state) "you")]
+  (let [current-player (or (current-player @app-state) "you")]
     (str current-player " just rolled a " (inc roll) ".")))
 
 (defn roll-dice [game-state]
@@ -82,34 +76,50 @@
 (defn roll-dice! []
   (swap! app-state roll-dice))
 
-(defn set-player [game-state n name]
-  (let [player-key (keyword (str "player" n))]
-    (assoc-in game-state [:players player-key] name)))
+(defn update-player-name [game-state name]
+  (assoc game-state :add-player-name name))
 
-(defn set-player! [n name]
-  (swap! app-state set-player n name))
+(defn update-player-name! [name ]
+  (swap! app-state update-player-name name))
+
+(defn player-queue [players]
+  (let [queue #queue []]
+    (apply conj queue players)))
 
 (defn initial-state [game-state]
   (assoc game-state :game-on? true
-                    :current-player (get-in game-state [:players :player1])))
+                    :player-cycle (player-queue (:players game-state))))
 
 (defn start-game! []
   (swap! app-state initial-state))
 
+(defn add-player [game-state]
+  (assoc game-state :players (conj (:players game-state) (:add-player-name game-state))
+                    :add-player-name nil))
+
+(defn add-player! []
+  (when-not (str/blank? (:add-player-name @app-state))
+    (swap! app-state add-player)
+    (when (= 6 (count (:players @app-state)))
+      (start-game!))))
+
 (defn reset-game [game-state]
   (assoc game-state :current-dice (first dice-specs)
                     :roll-history []
-                    :players {:player1 nil
-                              :player2 nil
-                              :player3 nil
-                              :player4 nil
-                              :player5 nil
-                              :player6 nil}
-                    :current-player nil
+                    :add-player-name nil
+                    :players []
                     :game-on? false))
 
 (defn reset-game! []
   (swap! app-state reset-game))
+
+(defn next-player [game-state]
+  (let [current-player (peek (:player-cycle game-state))
+        updated-queue (pop (:player-cycle game-state))]
+    (assoc game-state :player-cycle (conj updated-queue current-player))))
+
+(defn next-player! []
+  (swap! app-state next-player))
 
 (defn current-dice-transform [key]
   (get-in @app-state [:current-dice :transform key]))
@@ -145,43 +155,47 @@
   ([side-spec]
    (dice-side (:color side-spec) (:dots side-spec))))
 
-(defn player-input-row [n]
-  ^{:key (str "player" n)}
-  [:div
-   {:class "row"}
-   [:div
-    {:class "col-md-2 col-md-offset-5"}
-    [:label
-     {:for (str "txt-player" n)}
-     (str "Player " n ": ")]
-    [:input
-     {:id (str "txt-player" n)
-      :type "text"
-      :on-change #(set-player! n (-> % .-target .-value))}]]])
-
 (defn main-view []
   [:center
    [:h1 "LBPERRYDAY!"]
-   [:button
-    {:id "btn-get-players"
-     :class (str "btn btn-primary" (hidden-during-game))
-     :data-toggle "collapse"
-     :data-target "#players"}
-    "Player Names"]
    [:div
-    {:id "players"
-     :class (str "collapse" (hidden-during-game))}
-    [:p "Please enter between two and six player names in the boxes below.  Enter them in playing order.  Don't be dicks about it."]
-    (for [i (range 1 7)]
-      (player-input-row i))
-    [:button
-     {:id "btn-start"
-      :class (str "btn btn-success")
-      :on-click #(start-game!)}
-     "Start The Game!"]]
+    {:id "gather-players"
+     :class (hidden-during-game)}
+    [:div
+     {:class "row"}
+     [:input
+      {:id "txt-player-name"
+       :type "text"
+       :value (:add-player-name @app-state)
+       :on-change #(update-player-name! (-> % .-target .-value))}]
+     [:button
+      {:id "btn-add-player"
+       :class "btn btn-primary"
+       :on-click #(add-player!)}
+      "Add Player"]
+     [:button
+      {:id "btn-start"
+       :class (str "btn btn-success")
+       :on-click #(start-game!)}
+      "Start The Game!"]]
+    [:div
+     [:text "Players List"]
+     (for [player (:players @app-state)]
+       (do
+         ^{:key player}
+         [:div
+          {:class "row small"}
+          player]))]]
+
    [:div
     {:id "buttons"
      :class (shown-during-game)}
+    [:text (str (current-player @app-state) ", it's your turn.")]
+    [:button
+     {:id "btn-end-turn"
+      :class "btn"
+      :on-click #(next-player!)}
+     "End Turn"]
     [:button
      {:id "btn-end-game"
       :class "btn btn-danger"
