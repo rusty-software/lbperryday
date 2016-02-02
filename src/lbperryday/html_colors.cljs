@@ -1,5 +1,22 @@
 (ns lbperryday.html-colors)
 
+(def game-board-colors ["LightPink"
+                        "LightSalmon"
+                        "Peachpuff"
+                        "Lavender"
+                        "Thistle"
+                        "BlanchedAlmond"
+                        "Seashell"])
+
+(def dice-colors ["CadetBlue"
+                  "Coral"
+                  "CornflowerBlue"
+                  "DarkKhaki"
+                  "DarkSlateBlue"
+                  "Brown"])
+
+(def player-colors [])
+
 (def names ["AliceBlue"
             "AntiqueWhite"
             "Aqua"

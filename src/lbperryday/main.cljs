@@ -1,33 +1,34 @@
 (ns lbperryday.main
   (:require [reagent.core :as reagent :refer [atom]]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [lbperryday.html-colors :as colors]))
 
 (enable-console-print!)
 
 (def dice-specs
-  [{:color "cadetblue"
+  [{:color (get colors/dice-colors 0)
     :dots [{:x 37 :y 37}]
     :val 1
     :transform {:rx 145 :ry -45 :rz 0}}
-   {:color "coral"
+   {:color (get colors/dice-colors 1)
     :dots [{:x 14.25 :y 57.5}
            {:x 56.75 :y 16.5}]
     :val 2
     :transform {:rx -45 :ry 50 :rz 0}}
-   {:color "cornflowerblue"
+   {:color (get colors/dice-colors 2)
     :dots [{:x 14.25 :y 57.5}
            {:x 37 :y 37}
            {:x 56.75 :y 16.5}]
     :val 3
     :transform {:rx -45 :ry 225 :rz -90}}
-   {:color "darkkhaki"
+   {:color (get colors/dice-colors 3)
     :dots [{:x 14.27 :y 16.5}
            {:x 14.25 :y 57.5}
            {:x 56.75 :y 16.5}
            {:x 56.75 :y 57.5}]
     :val 4
     :transform {:rx -45 :ry 50 :rz 90}}
-   {:color "darkslateblue"
+   {:color (get colors/dice-colors 4)
     :dots [{:x 14.27 :y 16.5}
            {:x 14.25 :y 57.5}
            {:x 37 :y 37}
@@ -35,7 +36,7 @@
            {:x 56.75 :y 57.5}]
     :val 5
     :transform {:rx 50 :ry 0 :rz 50}}
-   {:color "brown"
+   {:color (get colors/dice-colors 5)
     :dots [{:x 14.27 :y 16.5}
            {:x 14.27 :y 37}
            {:x 14.25 :y 57.5}
@@ -158,6 +159,25 @@
   ([side-spec]
    (dice-side (:color side-spec) (:dots side-spec))))
 
+(def board-dimensions {:width 700
+                       :height 420})
+
+(defn game-board []
+  [:div
+   {:id "game-board-area"}
+   [:svg
+    {:view-box (str "0 0 " (:width board-dimensions) (:height board-dimensions))
+     :width (:width board-dimensions)
+     :height (:height board-dimensions)}
+    [:rect
+     {:x 0
+      :y 0
+      :width (:width board-dimensions)
+      :height (:height board-dimensions)
+      :stroke "Black"
+      :stroke-width "0.5"
+      :fill (rand-nth colors/game-board-colors)}]]])
+
 (defn main-view []
   [:center
    [:h1 "LBPERRYDAY!"]
@@ -193,31 +213,33 @@
           player]))]]
 
    [:div
-    {:id "buttons"
+    {:id "play-area"
      :class (shown-during-game)}
     [:div
-     {:class "row"}
-     (str (current-player @app-state) ", it's your turn.")]
-    [:div
-     {:class "row"}
-     [:button
-      {:id "btn-draw-card"
-       :style {:margin-right 2}
-       :class "btn btn-success"
-       :on-clikc #(draw-card!)}
-      "Draw Card"]
-     [:button
-      {:id "btn-end-turn"
-       :style {:margin-right 2}
-       :class "btn btn-warning"
-       :on-click #(next-player!)}
-      "End Turn"]
-     [:button
-      {:id "btn-end-game"
-       :class "btn btn-danger"
-       :on-click #(reset-game!)}
-      "Punt On This Shitty Game!"]]
-    ]
+     {:id "buttons"}
+     [:div
+      {:class "row"}
+      (str (current-player @app-state) ", it's your turn.")]
+     [:div
+      {:class "row"}
+      [:button
+       {:id "btn-draw-card"
+        :style {:margin-right 2}
+        :class "btn btn-success"
+        :on-clikc #(draw-card!)}
+       "Draw Card"]
+      [:button
+       {:id "btn-end-turn"
+        :style {:margin-right 2}
+        :class "btn btn-warning"
+        :on-click #(next-player!)}
+       "End Turn"]
+      [:button
+       {:id "btn-end-game"
+        :class "btn btn-danger"
+        :on-click #(reset-game!)}
+       "End Game Without Winner!"]]]
+    (game-board)]
 
    [:div
     [:div
@@ -241,7 +263,9 @@
          ^{:key (str roll (rand-int 10000000))}
          [:div
           {:class "row small"}
-          roll]))]]])
+          roll]))]
+    [:div
+     {:id "card-display-area"}]]])
 
 (defn ^:export main []
   (when-let [app (. js/document (getElementById "app"))]

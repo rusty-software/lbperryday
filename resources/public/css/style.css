@@ -31,6 +31,15 @@ svg {
   border: 1px solid;
   overflow: auto;
 }
+#card-display-area {
+  position: absolute;
+  top: 400px;
+  left: 50px;
+  width: 240px;
+  height: 368px;
+  border: 1px solid;
+  overflow: auto;
+}
 #dice-cube {
   position: absolute;
   left: 25px;
@@ -91,3 +100,78 @@ svg {
   -webkit-transform: translateZ(-37px) rotateZ(0deg);
   -moz-transform: translateZ(-37px) rotateZ(0deg);
 }
+#game-board-area {
+  position: absolute;
+  top: 140px;
+  left: 440px;
+  width: 800px;
+  height: 420px;
+  cursor: pointer;
+}
+.stripe-1 {
+  color: white;
+  background: repeating-linear-gradient(
+    45deg,
+    #606dbc,
+    #606dbc 10px,
+    #465298 10px,
+    #465298 20px
+  );
+}
+.stripe-2 {
+  color: black;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    #ccc 10px,
+    #ccc 20px
+  ),
+  linear-gradient(
+    to bottom,
+    #eee,
+    #999
+  )
+}
+.stripe-3 {
+  color: white;
+  background: repeating-radial-gradient(
+    circle,
+    purple,
+    purple 10px,
+    #4b026f 10px,
+    #4b026f 20px
+  );
+}
+.stripe-4 {
+  color: white;
+  background: repeating-linear-gradient(
+    -55deg,
+    #222,
+    #222 10px,
+    #333 10px,
+    #333 20px
+  );
+}
+.stripe-5 {
+  color: white;
+  background: linear-gradient(
+    to bottom,
+    #5d9634,
+    #5d9634 50%,
+    #538c2b 50%,
+    #538c2b
+  );
+  background-size: 100% 20px;
+}
+.stripe-6 {
+  color: black;
+  background: repeating-linear-gradient(
+    to right,
+    #f6ba52,
+    #f6ba52 10px,
+    #ffd180 10px,
+    #ffd180 20px
+  );
+}
+
