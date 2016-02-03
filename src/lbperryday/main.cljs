@@ -90,9 +90,18 @@
   (let [queue #queue []]
     (apply conj queue players)))
 
+(defn initial-player-data-map [players]
+  (loop [player-data {}
+         players players
+         y 20]
+    (if (empty? players)
+      player-data
+      (recur (assoc player-data (first players) {:x 50 :y y}) (rest players) (+ y 20)))))
+
 (defn initial-state [game-state]
   (assoc game-state :game-on? true
-                    :player-cycle (player-queue (:players game-state))))
+                    :player-cycle (player-queue (:players game-state))
+                    :player-data (initial-player-data-map (:players game-state))))
 
 (defn start-game! []
   (swap! app-state initial-state))
@@ -189,13 +198,10 @@
       :stroke "Black"
       :stroke-width "0.5"
       :fill "DarkSeaGreen"}]
-    (let [root (reagent/current-component)
-          players (:players @app-state)
-          ys (range 0 (* 20 (count players)) 20)]
-      (map (fn [player y]
-             (c/player-name {:on-drag (move-name root)} {:x 50 :y (+ 20 y) :name player}))
-           players
-           ys))]])
+    (let [root (reagent/current-component)]
+      (map (fn [[name data]]
+             (c/player-name {:on-drag (move-name root)} {:x (:x data) :y (:y data) :name name}))
+           (:player-data @app-state)))]])
 
 (defn main-view []
   [:center
