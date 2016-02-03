@@ -164,9 +164,15 @@
 
 (def board-dimensions {:width 700
                        :height 420})
+(defn get-bcr [svg-root]
+  (-> svg-root
+      reagent/dom-node
+      .getBoundingClientRect))
 
-(defn move-name [svg-root n]
-  (not-implemented "move-name"))
+(defn move-name [svg-root]
+  (fn [x y]
+    (println "move-name not finished...")
+    (println "new x" x "new y" y)))
 
 (defn game-board []
   [:div
@@ -183,8 +189,13 @@
       :stroke "Black"
       :stroke-width "0.5"
       :fill "DarkSeaGreen"}]
-    (c/player-name {:on-drag (move-name nil nil)} {:x 50 :y 50 :name "Player 1"})
-    (c/player-name {:on-drag (move-name nil nil)} {:x 120 :y 120 :name "Player 2"})]])
+    (let [root (reagent/current-component)
+          players (:players @app-state)
+          ys (range 0 (* 20 (count players)) 20)]
+      (map (fn [player y]
+             (c/player-name {:on-drag (move-name root)} {:x 50 :y (+ 20 y) :name player}))
+           players
+           ys))]])
 
 (defn main-view []
   [:center

@@ -26,6 +26,7 @@
      (events/listen js/window EventType.MOUSEUP drag-end))))
 
 (defn player-name [{:keys [on-drag]} {:keys [x y name]}]
+  ^{:key (str "player-" name)}
   [:text
    (merge text-defaults
           {:on-mouse-down #(dragging on-drag)
