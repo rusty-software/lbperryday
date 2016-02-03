@@ -50,7 +50,7 @@
     :transform {:rx 45 :ry 180 :rz -45}}])
 
 (defonce app-state (atom {:current-dice (first dice-specs)
-                          :roll-history []
+                          :roll-history '()
                           :add-player-name nil
                           :players []
                           :game-on? false}))
@@ -60,7 +60,7 @@
 
 (defn roll-history-row [roll]
   (let [current-player (or (current-player @app-state) "you")]
-    (str current-player " just rolled a " (inc roll) ".")))
+    (str current-player " just rolled a " (inc roll))))
 
 (defn roll-dice [game-state]
   (let [roll (rand-int 6)]
@@ -169,7 +169,7 @@
   (.log js/console bcr)
   (println "x" x "y" y)
   (println "left bcr" (.-left bcr) "top bcr" (.-top bcr))
-  (assoc player-data :x (- x (.-left bcr)) :y (- y (.-top bcr))))
+  (assoc player-data :x x #_(- x (.-left bcr)) :y y #_(- y (.-top bcr))))
 
 (defn move-name! [svg-root game-state name]
   (let [player-data (get-in game-state [:player-data name])]
@@ -274,7 +274,7 @@
            (dice-side side-spec))]]
        [:div
         {:id "dice-result"}
-        (for [roll (reverse (:roll-history @app-state))]
+        (for [roll (:roll-history @app-state)]
           (do
             ^{:key (str roll (rand-int 10000000))}
             [:div

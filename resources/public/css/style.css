@@ -1,12 +1,15 @@
+/*
+Ubuntu, Roboto Slab, Cabin, Yanone Kaffeesatz, Bree Serif, Josefin Sans, Shadows Into Light, Amatic SC, Architects Daughter
+*/
 body {
   margin: 10;
   padding: 0;
-  font-family: "Indie Flower", "Roboto", "Verdana", "Arial";
+  font-family: "Bree Serif", "Indie Flower";
   font-size: x-large;
   background: LemonChiffon;
 }
 h1 {
-  font-family: "Bangers", "Candal", "Roboto", "Verdana", "Arial";
+  font-family: "Bangers";
 }
 .board-area {
   position: absolute;
