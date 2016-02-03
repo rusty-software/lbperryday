@@ -49,17 +49,6 @@
     :val 6
     :transform {:rx 45 :ry 180 :rz -45}}])
 
-(comment
-  :app-state-sample
-  {:current-dice {:color ""
-                  :dots [{:x 0 :y 0}]
-                  :val 1
-                  :transform {:rx 0 :ry 0 :rz 0}}
-   :roll-history []
-   :game-on? true
-   :players ["" "" ""]
-   :current-player ""})
-
 (defonce app-state (atom {:current-dice (first dice-specs)
                           :roll-history []
                           :add-player-name nil
@@ -76,7 +65,7 @@
 (defn roll-dice [game-state]
   (let [roll (rand-int 6)]
     (assoc game-state :current-dice (get dice-specs roll)
-                      :roll-history (conj (:roll-history game-state) (roll-history-row roll)))))
+                      :roll-history (take 6 (conj (:roll-history game-state) (roll-history-row roll))))))
 (defn roll-dice! []
   (swap! app-state roll-dice))
 
@@ -154,7 +143,7 @@
   ([side-color dots]
    ^{:key side-color}
    [:svg
-    {:class "side"
+    {:class "dice-svg side"
      :width 100
      :height 100}
     [:rect
@@ -171,141 +160,126 @@
   ([side-spec]
    (dice-side (:color side-spec) (:dots side-spec))))
 
-(def board-dimensions {:width 700
-                       :height 420})
 (defn get-bcr [svg-root]
   (-> svg-root
       reagent/dom-node
       .getBoundingClientRect))
 
 (defn move-name [player-data bcr x y]
-  (let [bullshit (.getBoundingClientRect (.getElementById js/document "svg-box"))]
-    (.log js/console bcr)
-    (println "x" x "y" y)
-    (println "left bcr" (.-left bcr) "top bcr" (.-top bcr))
-    (assoc player-data :x (- x 300 (.-left bcr)) :y (- y 164 (.-top bcr)))))
+  (.log js/console bcr)
+  (println "x" x "y" y)
+  (println "left bcr" (.-left bcr) "top bcr" (.-top bcr))
+  (assoc player-data :x (- x (.-left bcr)) :y (- y (.-top bcr))))
 
 (defn move-name! [svg-root game-state name]
-  (let [player-data (get-in game-state [:player-data name])
-        bcr (get-bcr svg-root)]
+  (let [player-data (get-in game-state [:player-data name])]
     (fn [x y]
       (let [bcr (get-bcr svg-root)
             updated-player-data (move-name player-data bcr x y)
             updated-game-state (assoc-in game-state [:player-data name] updated-player-data)]
         (reset! app-state updated-game-state)))))
 
+(def board-dimensions {:width 900
+                       :height 600})
+
 (defn game-board []
   [:div
-   {:id "game-board-area"
-    :class "game-board-area"}
-   (let [root (reagent/current-component)]
-     [:svg
-      {#_#_:view-box (str "0 0 " (:width board-dimensions) " " (:height board-dimensions))
-       :id "svg-box"
-       :width (:width board-dimensions)
-       :height (:height board-dimensions)}
-      [:rect
+   {:class "board-area"}
+   [:svg
+    {#_#_:view-box (str "0 0 " (:width board-dimensions) " " (:height board-dimensions))
+     :id "svg-box"
+     :width (:width board-dimensions)
+     :height (:height board-dimensions)
+     :style {:border "0.5px solid black"}}
+    [:rect
        {:x 0
         :y 0
         :width (:width board-dimensions)
         :height (:height board-dimensions)
-        :stroke "Black"
-        :stroke-width "0.5"
         :fill "DarkSeaGreen"}]
+    (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
                (c/player-name {:on-drag (move-name! root @app-state name)} {:x (:x data) :y (:y data) :name name}))
-             (:player-data @app-state)))])])
+             (:player-data @app-state))))]])
 
 (defn main-view []
-  [:center
-   [:h1 "LBPERRYDAY!"]
+  [:div
+   (game-board)
    [:div
-    {:id "gather-players"
-     :class (hidden-during-game)}
-    [:div
-     {:class "row"}
-     [:input
-      {:id "txt-player-name"
-       :style {:margin-right 2}
-       :type "text"
-       :value (:add-player-name @app-state)
-       :on-change #(update-player-name! (-> % .-target .-value))}]
-     [:button
-      {:id "btn-add-player"
-       :style {:margin-right 2}
-       :class "btn btn-primary"
-       :on-click #(add-player!)}
-      "Add Player"]
-     [:button
-      {:id "btn-start"
-       :class (str "btn btn-success")
-       :on-click #(start-game!)}
-      "Start The Game!"]]
-    [:div
-     [:text "Players List"]
-     (for [player (:players @app-state)]
-       (do
-         ^{:key player}
-         [:div
-          {:class "row small"}
-          player]))]]
+    {:class "data-area"}
+    [:center
+     [:h1 "LBPErryDay!"]
+     [:div
+      {:id "gather-players"}
+      [:div
+       [:input
+        {:id "txt-player-name"
+         :style {:margin-right 2}
+         :type "text"
+         :value (:add-player-name @app-state)
+         :on-change #(update-player-name! (-> % .-target .-value))}]
+       [:button
+        {:id "btn-add-player"
+         :style {:margin-right 2}
+         :on-click #(add-player!)}
+        "Add Player"]
+       [:button
+        {:id "btn-start"
+         :on-click #(start-game!)}
+        "Start The Game!"]]
+      [:div
+       [:text "Players List"]
+       (for [player (:players @app-state)]
+         (do
+           ^{:key player}
+           [:div
+            player]))]]
+     [:div
+      {:id "play-area"}
+      [:div
+       {:id "buttons"}
+       [:div
+        (str (current-player @app-state) ", it's your turn.")]
+       [:div
+        [:button
+         {:id "btn-draw-card"
+          :style {:margin-right 2}
+          :on-click #(draw-card!)}
+         "Draw Card"]
+        [:button
+         {:id "btn-end-turn"
+          :style {:margin-right 2}
+          :on-click #(next-player!)}
+         "End Turn"]
+        [:button
+         {:id "btn-end-game"
+          :on-click #(reset-game!)}
+         "End Game Without Winner!"]]]
 
-   [:div
-    {:id "play-area"
-     :class (shown-during-game)}
-    [:div
-     {:id "buttons"}
-     [:div
-      {:class "row"}
-      (str (current-player @app-state) ", it's your turn.")]
-     [:div
-      {:class "row"}
-      [:button
-       {:id "btn-draw-card"
-        :style {:margin-right 2}
-        :class "btn btn-success"
-        :on-click #(draw-card!)}
-       "Draw Card"]
-      [:button
-       {:id "btn-end-turn"
-        :style {:margin-right 2}
-        :class "btn btn-warning"
-        :on-click #(next-player!)}
-       "End Turn"]
-      [:button
-       {:id "btn-end-game"
-        :class "btn btn-danger"
-        :on-click #(reset-game!)}
-       "End Game Without Winner!"]]]
-    (game-board)]
-
-   [:div
-    {:class "hidden"}
-    [:div
-     {:id "dice-roll-area"
-      :on-click #(roll-dice!)}
-     [:div
-      {:id "dice-cube"
-       :style {:transform (str " rotateX("
-                               (current-dice-transform :rx)
-                               "deg) rotateY("
-                               (current-dice-transform :ry)
-                               "deg) rotateZ("
-                               (current-dice-transform :rz)
-                               "deg)")}}
-      (for [side-spec dice-specs]
-        (dice-side side-spec))]]
-    [:div
-     {:id "dice-result"}
-     (for [roll (reverse (:roll-history @app-state))]
-       (do
-         ^{:key (str roll (rand-int 10000000))}
-         [:div
-          {:class "row small"}
-          roll]))]
-    [:div
-     {:id "card-display-area"}]]])
+      [:div
+       [:div
+        {:id "dice-roll-area"
+         :on-click #(roll-dice!)}
+        [:div
+         {:id "dice-cube"
+          :style {:transform (str " rotateX("
+                                  (current-dice-transform :rx)
+                                  "deg) rotateY("
+                                  (current-dice-transform :ry)
+                                  "deg) rotateZ("
+                                  (current-dice-transform :rz)
+                                  "deg)")}}
+         (for [side-spec dice-specs]
+           (dice-side side-spec))]]
+       [:div
+        {:id "dice-result"}
+        (for [roll (reverse (:roll-history @app-state))]
+          (do
+            ^{:key (str roll (rand-int 10000000))}
+            [:div
+             roll]))]
+       ]]]]])
 
 (defn ^:export main []
   (when-let [app (. js/document (getElementById "app"))]
