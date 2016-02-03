@@ -25,7 +25,7 @@
      (events/listen js/window EventType.MOUSEMOVE drag-move)
      (events/listen js/window EventType.MOUSEUP drag-end))))
 
-(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
+#_(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
   ^{:key (str "player-" name)}
   [:text
    (merge text-defaults
@@ -33,3 +33,12 @@
            :x x
            :y y})
    name])
+
+(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
+  ^{:key (str "player-" name)}
+  [:circle
+   {:on-mouse-down #(dragging on-drag)
+    :cx x
+    :cy y
+    :r 5
+    :fill "blue"}])

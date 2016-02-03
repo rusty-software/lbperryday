@@ -178,30 +178,44 @@
       reagent/dom-node
       .getBoundingClientRect))
 
-(defn move-name [svg-root]
-  (fn [x y]
-    (println "move-name not finished...")
-    (println "new x" x "new y" y)))
+(defn move-name [player-data bcr x y]
+  (let [bullshit (.getBoundingClientRect (.getElementById js/document "svg-box"))]
+    (.log js/console bcr)
+    (println "x" x "y" y)
+    (println "left bcr" (.-left bcr) "top bcr" (.-top bcr))
+    (assoc player-data :x (- x 300 (.-left bcr)) :y (- y 164 (.-top bcr)))))
+
+(defn move-name! [svg-root game-state name]
+  (let [player-data (get-in game-state [:player-data name])
+        bcr (get-bcr svg-root)]
+    (fn [x y]
+      (let [bcr (get-bcr svg-root)
+            updated-player-data (move-name player-data bcr x y)
+            updated-game-state (assoc-in game-state [:player-data name] updated-player-data)]
+        (reset! app-state updated-game-state)))))
 
 (defn game-board []
   [:div
-   {:id "game-board-area"}
-   [:svg
-    {:view-box (str "0 0 " (:width board-dimensions) " " (:height board-dimensions))
-     :width (:width board-dimensions)
-     :height (:height board-dimensions)}
-    [:rect
-     {:x 0
-      :y 0
-      :width (:width board-dimensions)
-      :height (:height board-dimensions)
-      :stroke "Black"
-      :stroke-width "0.5"
-      :fill "DarkSeaGreen"}]
-    (let [root (reagent/current-component)]
-      (map (fn [[name data]]
-             (c/player-name {:on-drag (move-name root)} {:x (:x data) :y (:y data) :name name}))
-           (:player-data @app-state)))]])
+   {:id "game-board-area"
+    :class "game-board-area"}
+   (let [root (reagent/current-component)]
+     [:svg
+      {#_#_:view-box (str "0 0 " (:width board-dimensions) " " (:height board-dimensions))
+       :id "svg-box"
+       :width (:width board-dimensions)
+       :height (:height board-dimensions)}
+      [:rect
+       {:x 0
+        :y 0
+        :width (:width board-dimensions)
+        :height (:height board-dimensions)
+        :stroke "Black"
+        :stroke-width "0.5"
+        :fill "DarkSeaGreen"}]
+      (doall
+        (map (fn [[name data]]
+               (c/player-name {:on-drag (move-name! root @app-state name)} {:x (:x data) :y (:y data) :name name}))
+             (:player-data @app-state)))])])
 
 (defn main-view []
   [:center
@@ -267,6 +281,7 @@
     (game-board)]
 
    [:div
+    {:class "hidden"}
     [:div
      {:id "dice-roll-area"
       :on-click #(roll-dice!)}
