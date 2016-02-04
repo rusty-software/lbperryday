@@ -2,7 +2,7 @@
   (:require [goog.events :as events])
   (:import [goog.events EventType]))
 
-(def text-defaults {:font-size "xx-small"})
+(def text-defaults {:font-size "x-small"})
 
 (defn drag-move-fn [on-drag]
   (fn [evt]
@@ -25,7 +25,7 @@
      (events/listen js/window EventType.MOUSEMOVE drag-move)
      (events/listen js/window EventType.MOUSEUP drag-end))))
 
-#_(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
+(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
   ^{:key (str "player-" name)}
   [:text
    (merge text-defaults
@@ -34,7 +34,7 @@
            :y y})
    name])
 
-(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
+#_(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
   ^{:key (str "player-" name)}
   [:circle
    {:on-mouse-down #(dragging on-drag)

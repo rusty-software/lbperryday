@@ -110,6 +110,8 @@
                     :roll-history []
                     :add-player-name nil
                     :players []
+                    :player-cycle nil
+                    :player-data nil
                     :game-on? false))
 
 (defn reset-game! []
@@ -169,7 +171,7 @@
   (.log js/console bcr)
   (println "x" x "y" y)
   (println "left bcr" (.-left bcr) "top bcr" (.-top bcr))
-  (assoc player-data :x x #_(- x (.-left bcr)) :y y #_(- y (.-top bcr))))
+  (assoc player-data :x (- x (.-left bcr)) :y (- y (.-top bcr))))
 
 (defn move-name! [svg-root game-state name]
   (let [player-data (get-in game-state [:player-data name])]
@@ -211,7 +213,8 @@
     [:center
      [:h1 "LBPErryDay!"]
      [:div
-      {:id "gather-players"}
+      {:id "gather-players"
+       :class (hidden-during-game)}
       [:div
        [:input
         {:id "txt-player-name"
@@ -236,7 +239,8 @@
            [:div
             player]))]]
      [:div
-      {:id "play-area"}
+      {:id "play-area"
+       :class (shown-during-game)}
       [:div
        {:id "buttons"}
        [:div

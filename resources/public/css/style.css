@@ -11,6 +11,9 @@ body {
 h1 {
   font-family: "Bangers";
 }
+.hidden {
+  display: none;
+}
 .board-area {
   position: absolute;
   width: 900px;
