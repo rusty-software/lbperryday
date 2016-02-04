@@ -1,33 +1,37 @@
 (ns lbperryday.main
   (:require [reagent.core :as reagent :refer [atom]]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [lbperryday.html-colors :as colors]
+            [lbperryday.components :as c]))
 
 (enable-console-print!)
+(defn not-implemented [function-name]
+  (println function-name "is not implemented!"))
 
 (def dice-specs
-  [{:color "cadetblue"
+  [{:color (get colors/dice-colors 0)
     :dots [{:x 37 :y 37}]
     :val 1
     :transform {:rx 145 :ry -45 :rz 0}}
-   {:color "coral"
+   {:color (get colors/dice-colors 1)
     :dots [{:x 14.25 :y 57.5}
            {:x 56.75 :y 16.5}]
     :val 2
     :transform {:rx -45 :ry 50 :rz 0}}
-   {:color "cornflowerblue"
+   {:color (get colors/dice-colors 2)
     :dots [{:x 14.25 :y 57.5}
            {:x 37 :y 37}
            {:x 56.75 :y 16.5}]
     :val 3
     :transform {:rx -45 :ry 225 :rz -90}}
-   {:color "darkkhaki"
+   {:color (get colors/dice-colors 3)
     :dots [{:x 14.27 :y 16.5}
            {:x 14.25 :y 57.5}
            {:x 56.75 :y 16.5}
            {:x 56.75 :y 57.5}]
     :val 4
     :transform {:rx -45 :ry 50 :rz 90}}
-   {:color "darkslateblue"
+   {:color (get colors/dice-colors 4)
     :dots [{:x 14.27 :y 16.5}
            {:x 14.25 :y 57.5}
            {:x 37 :y 37}
@@ -35,7 +39,7 @@
            {:x 56.75 :y 57.5}]
     :val 5
     :transform {:rx 50 :ry 0 :rz 50}}
-   {:color "brown"
+   {:color (get colors/dice-colors 5)
     :dots [{:x 14.27 :y 16.5}
            {:x 14.27 :y 37}
            {:x 14.25 :y 57.5}
@@ -45,19 +49,8 @@
     :val 6
     :transform {:rx 45 :ry 180 :rz -45}}])
 
-(comment
-  :app-state-sample
-  {:current-dice {:color ""
-                  :dots [{:x 0 :y 0}]
-                  :val 1
-                  :transform {:rx 0 :ry 0 :rz 0}}
-   :roll-history []
-   :game-on? true
-   :players ["" "" ""]
-   :current-player ""})
-
 (defonce app-state (atom {:current-dice (first dice-specs)
-                          :roll-history []
+                          :roll-history '()
                           :add-player-name nil
                           :players []
                           :game-on? false}))
@@ -67,12 +60,12 @@
 
 (defn roll-history-row [roll]
   (let [current-player (or (current-player @app-state) "you")]
-    (str current-player " just rolled a " (inc roll) ".")))
+    (str current-player " just rolled a " (inc roll))))
 
 (defn roll-dice [game-state]
   (let [roll (rand-int 6)]
     (assoc game-state :current-dice (get dice-specs roll)
-                      :roll-history (conj (:roll-history game-state) (roll-history-row roll)))))
+                      :roll-history (take 3 (conj (:roll-history game-state) (roll-history-row roll))))))
 (defn roll-dice! []
   (swap! app-state roll-dice))
 
@@ -86,9 +79,18 @@
   (let [queue #queue []]
     (apply conj queue players)))
 
+(defn initial-player-data-map [players]
+  (loop [player-data {}
+         players players
+         y 20]
+    (if (empty? players)
+      player-data
+      (recur (assoc player-data (first players) {:x 50 :y y}) (rest players) (+ y 20)))))
+
 (defn initial-state [game-state]
   (assoc game-state :game-on? true
-                    :player-cycle (player-queue (:players game-state))))
+                    :player-cycle (player-queue (:players game-state))
+                    :player-data (initial-player-data-map (:players game-state))))
 
 (defn start-game! []
   (swap! app-state initial-state))
@@ -108,6 +110,8 @@
                     :roll-history []
                     :add-player-name nil
                     :players []
+                    :player-cycle nil
+                    :player-data nil
                     :game-on? false))
 
 (defn reset-game! []
@@ -120,6 +124,9 @@
 
 (defn next-player! []
   (swap! app-state next-player))
+
+(defn draw-card! []
+  (not-implemented "draw-card!"))
 
 (defn current-dice-transform [key]
   (get-in @app-state [:current-dice :transform key]))
@@ -138,7 +145,7 @@
   ([side-color dots]
    ^{:key side-color}
    [:svg
-    {:class "side"
+    {:class "dice-svg side"
      :width 100
      :height 100}
     [:rect
@@ -155,77 +162,235 @@
   ([side-spec]
    (dice-side (:color side-spec) (:dots side-spec))))
 
+(defn get-bcr [svg-root]
+  (-> svg-root
+      reagent/dom-node
+      .getBoundingClientRect))
+
+(defn move-name [player-data bcr x y]
+  (assoc player-data :x (- x (.-left bcr)) :y (- y (.-top bcr))))
+
+(defn move-name! [svg-root game-state name]
+  (let [player-data (get-in game-state [:player-data name])]
+    (fn [x y]
+      (let [bcr (get-bcr svg-root)
+            updated-player-data (move-name player-data bcr x y)
+            updated-game-state (assoc-in game-state [:player-data name] updated-player-data)]
+        (reset! app-state updated-game-state)))))
+
+(def board-dimensions {:width 900
+                       :height 640})
+
+(defn generate-spiral-positions []
+  (concat
+    (for [i (range 7)]
+      {:x (+ 10 (* i 125))
+       :y 60})
+    (reverse
+      (for [i (range 5 -1 -1)]
+        {:x (+ 10 (* 6 125))
+         :y (+ 130 (* i 70))}))))
+
+(def spiral-positions
+  [
+   ;; top row, left to right
+   {:x 0 :y 60}
+   {:x 125 :y 60}
+   {:x 250 :y 60}
+   {:x 375 :y 60}
+   {:x 500 :y 60}
+   {:x 625 :y 60}
+   {:x 750 :y 60}
+   ;; right column, top to bottom
+   {:x 750 :y 130}
+   {:x 750 :y 200}
+   {:x 750 :y 270}
+   {:x 750 :y 340}
+   {:x 750 :y 410}
+   {:x 750 :y 480}
+   ;; bottom row, right to left
+   {:x 750 :y 550}
+   {:x 625 :y 550}
+   {:x 500 :y 550}
+   {:x 375 :y 550}
+   {:x 250 :y 550}
+   {:x 125 :y 550}
+   ;; left column, bottom to top
+   {:x 0 :y 550}
+   {:x 0 :y 480}
+   {:x 0 :y 410}
+   {:x 0 :y 340}
+   {:x 0 :y 270}
+   ;; second row, right to left
+   {:x 0 :y 200}
+   {:x 125 :y 200}
+   {:x 250 :y 200}
+   {:x 375 :y 200}
+   ;;
+   {:x 500 :y 200}
+   {:x 500 :y 270}
+   {:x 500 :y 340}
+
+   {:x 500 :y 410}
+   {:x 375 :y 410}
+   {:x 250 :y 410}
+
+   {:x 250 :y 340}
+   ])
+(def piece-positions
+  [{:x 0 :y 60}
+   {:x 125 :y 60}
+   {:x 250 :y 60}
+   {:x 375 :y 60}
+   {:x 500 :y 60}
+   {:x 625 :y 60}
+   {:x 750 :y 60}
+   ;; transition 1
+   {:x 750 :y 130}
+   ;; row 2, right to left
+   {:x 750 :y 200}
+   {:x 625 :y 200}
+   {:x 500 :y 200}
+   {:x 375 :y 200}
+   {:x 250 :y 200}
+   {:x 125 :y 200}
+   {:x 0 :y 200}
+   ;; transition
+   {:x 0 :y 270}
+   ;; row 3, left to right
+   {:x 0 :y 340}
+   {:x 125 :y 340}
+   {:x 250 :y 340}
+   {:x 375 :y 340}
+   {:x 500 :y 340}
+   {:x 625 :y 340}
+   {:x 750 :y 340}
+   ;; transition
+   {:x 750 :y 410}
+   ;; row 4, right to left
+   {:x 750 :y 480}
+   {:x 625 :y 480}
+   {:x 500 :y 480}
+   {:x 375 :y 480}
+   {:x 250 :y 480}
+   {:x 125 :y 480}
+   {:x 0 :y 480}
+   ])
+
+;; TODO: random fills should be set in atom, since they are recalculated with the mouse events
+(defn game-board []
+  [:div
+   {:class "board-area"}
+   [:svg
+    {:id "svg-box"
+     :width (:width board-dimensions)
+     :height (:height board-dimensions)
+     :style {:border "0.5px solid black"}}
+    [:defs
+     {:dangerouslySetInnerHTML
+      {:__html (str "<filter id=\"blurFilterBottomRight\" x=\"-10\" y=\"-10\" width=\"125\" height=\"70\" >"
+                     "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
+                     "  <feGaussianBlur in=\"offset2\" stdDeviation=\"3\" result=\"blur2\" />"
+                     "  <feMerge>"
+                     "    <feMergeNode in=\"blur2\" />"
+                     "    <feMergeNode in=\"SourceGraphic\" />"
+                     "  </feMerge>"
+                     "</filter>")}}
+     ]
+    [:rect
+       {:x 0
+        :y 0
+        :width (:width board-dimensions)
+        :height (:height board-dimensions)
+        :fill "DarkSeaGreen"}]
+    (for [i (range (count spiral-positions))]
+      (let [{:keys [x y]} (get spiral-positions i)]
+        (c/board-space x y)))
+    (let [root (reagent/current-component)]
+      (doall
+        (map (fn [[name data]]
+               (c/player-name {:on-drag (move-name! root @app-state name)} {:x (:x data) :y (:y data) :name name}))
+             (:player-data @app-state))))]])
+
 (defn main-view []
-  [:center
-   [:h1 "LBPERRYDAY!"]
+  [:div
+   (game-board)
    [:div
-    {:id "gather-players"
-     :class (hidden-during-game)}
-    [:div
-     {:class "row"}
-     [:input
-      {:id "txt-player-name"
-       :type "text"
-       :value (:add-player-name @app-state)
-       :on-change #(update-player-name! (-> % .-target .-value))}]
-     [:button
-      {:id "btn-add-player"
-       :class "btn btn-primary"
-       :on-click #(add-player!)}
-      "Add Player"]
-     [:button
-      {:id "btn-start"
-       :class (str "btn btn-success")
-       :on-click #(start-game!)}
-      "Start The Game!"]]
-    [:div
-     [:text "Players List"]
-     (for [player (:players @app-state)]
-       (do
-         ^{:key player}
-         [:div
-          {:class "row small"}
-          player]))]]
-
-   [:div
-    {:id "buttons"
-     :class (shown-during-game)}
-    [:text (str (current-player @app-state) ", it's your turn.")]
-    [:button
-     {:id "btn-end-turn"
-      :class "btn"
-      :on-click #(next-player!)}
-     "End Turn"]
-    [:button
-     {:id "btn-end-game"
-      :class "btn btn-danger"
-      :on-click #(reset-game!)}
-     "Punt On This Shitty Game!"]
-    ]
-
-   [:div
-    [:div
-     {:id "dice-roll-area"
-      :on-click #(roll-dice!)}
+    {:class "data-area"}
+    [:center
+     [:h1 "LBPErryDay!"]
      [:div
-      {:id "dice-cube"
-       :style {:transform (str " rotateX("
-                               (current-dice-transform :rx)
-                               "deg) rotateY("
-                               (current-dice-transform :ry)
-                               "deg) rotateZ("
-                               (current-dice-transform :rz)
-                               "deg)")}}
-      (for [side-spec dice-specs]
-        (dice-side side-spec))]]
-    [:div
-     {:id "dice-result"}
-     (for [roll (reverse (:roll-history @app-state))]
-       (do
-         ^{:key (str roll (rand-int 10000000))}
-         [:div
-          {:class "row small"}
-          roll]))]]])
+      {:id "gather-players"
+       :class (hidden-during-game)}
+      [:div
+       [:input
+        {:id "txt-player-name"
+         :style {:margin-right 2}
+         :type "text"
+         :value (:add-player-name @app-state)
+         :on-change #(update-player-name! (-> % .-target .-value))}]
+       [:button
+        {:id "btn-add-player"
+         :style {:margin-right 2}
+         :on-click #(add-player!)}
+        "Add Player"]
+       [:button
+        {:id "btn-start"
+         :on-click #(start-game!)}
+        "Start The Game!"]]
+      [:div
+       (for [player (:players @app-state)]
+         (do
+           ^{:key player}
+           [:div
+            player]))]]
+     [:div
+      {:id "play-area"
+       :class (shown-during-game)}
+      [:div
+       {:id "buttons"}
+
+       [:div
+        [:button
+         {:id "btn-draw-card"
+          :on-click #(draw-card!)}
+         "Draw Card"]
+        [:button
+         {:id "btn-end-turn"
+          :on-click #(next-player!)}
+         "End Turn"]
+        [:button
+         {:id "btn-end-game"
+          :class "red-button"
+          :on-click #(reset-game!)}
+         "Give Up!"]]
+       [:div
+        (str (current-player @app-state) ", it's your turn.")]
+       ]
+
+      [:div
+       [:div
+        {:id "dice-roll-area"
+         :on-click #(roll-dice!)}
+        [:div
+         {:id "dice-cube"
+          :style {:transform (str " rotateX("
+                                  (current-dice-transform :rx)
+                                  "deg) rotateY("
+                                  (current-dice-transform :ry)
+                                  "deg) rotateZ("
+                                  (current-dice-transform :rz)
+                                  "deg)")}}
+         (for [side-spec dice-specs]
+           (dice-side side-spec))]]
+       [:div
+        {:id "dice-result"}
+        (for [roll (:roll-history @app-state)]
+          (do
+            ^{:key (str roll (rand-int 10000000))}
+            [:div
+             roll]))]
+       ]]]]])
 
 (defn ^:export main []
   (when-let [app (. js/document (getElementById "app"))]
