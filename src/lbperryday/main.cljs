@@ -65,7 +65,7 @@
 (defn roll-dice [game-state]
   (let [roll (rand-int 6)]
     (assoc game-state :current-dice (get dice-specs roll)
-                      :roll-history (take 6 (conj (:roll-history game-state) (roll-history-row roll))))))
+                      :roll-history (take 3 (conj (:roll-history game-state) (roll-history-row roll))))))
 (defn roll-dice! []
   (swap! app-state roll-dice))
 
@@ -232,7 +232,6 @@
          :on-click #(start-game!)}
         "Start The Game!"]]
       [:div
-       [:text "Players List"]
        (for [player (:players @app-state)]
          (do
            ^{:key player}
@@ -243,23 +242,24 @@
        :class (shown-during-game)}
       [:div
        {:id "buttons"}
-       [:div
-        (str (current-player @app-state) ", it's your turn.")]
+
        [:div
         [:button
          {:id "btn-draw-card"
-          :style {:margin-right 2}
           :on-click #(draw-card!)}
          "Draw Card"]
         [:button
          {:id "btn-end-turn"
-          :style {:margin-right 2}
           :on-click #(next-player!)}
          "End Turn"]
         [:button
          {:id "btn-end-game"
+          :class "red-button"
           :on-click #(reset-game!)}
-         "End Game Without Winner!"]]]
+         "Give Up!"]]
+       [:div
+        (str (current-player @app-state) ", it's your turn.")]
+       ]
 
       [:div
        [:div
