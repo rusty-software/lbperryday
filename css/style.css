@@ -1,35 +1,69 @@
+/*
+Ubuntu, Roboto Slab, Cabin, Yanone Kaffeesatz, Bree Serif, Josefin Sans, Shadows Into Light, Amatic SC, Architects Daughter
+*/
 body {
-  margin: 0;
+  margin: 10;
   padding: 0;
+  font-family: "Bree Serif", "Indie Flower";
+  font-size: x-large;
   background: LemonChiffon;
 }
-svg {
-  display: block;
-  margin: auto;
-  -webkit-transform-origin: top center;
-  -webkit-transform: scale(1.5);
-  -moz-transform-origin: top center;
-  -moz-transform: scale(1.5);
+h1 {
+  font-family: "Bangers";
+    -webkit-margin-before: 0.2em;
+    -webkit-margin-after: 0.2em;
 }
-.hit-area {
-  cursor: pointer;
+.hidden {
+  display: none;
 }
+.board-area {
+  position: absolute;
+  width: 900px;
+  height: 600px;
+}
+.data-area {
+  position: absolute;
+  left: 920px;
+  width: 500px;
+}
+
 #dice-roll-area {
   position: absolute;
-  top: 100px;
-  left: 100px;
+  top: 470px;
+  left: 0px;
   width: 125px;
   height: 125px;
   cursor: pointer;
 }
 #dice-result {
   position: absolute;
-  top: 225px;
-  left: 70px;
-  width: 200px;
+  top: 470px;
+  left: 140px;
+  width: 300px;
   height: 165px;
-  border: 1px solid;
-  overflow: auto;
+}
+.dice-svg {
+  display: block;
+  -webkit-transform-origin: top center;
+  -webkit-transform: scale(1.5);
+  -moz-transform-origin: top center;
+  -moz-transform: scale(1.5);
+}
+.side {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 74px;
+  height: 74px;
+  pointer-events: none;
+  backface-visibility: visible;
+  -webkit-transform-origin: center center;
+  -webkit-backface-visibility: visible;
+  -moz-transform-origin: center center;
+  -moz-backface-visibility: visible;
+}
+.side * {
+  pointer-events: none;
 }
 #dice-cube {
   position: absolute;
@@ -50,22 +84,6 @@ svg {
   -moz-backface-visibility: visible;
   -moz-transform: rotateX(-45deg) rotateY(50deg);
   -moz-transition: -moz-transform 1s;
-}
-.side {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 74px;
-  height: 74px;
-  pointer-events: none;
-  backface-visibility: visible;
-  -webkit-transform-origin: center center;
-  -webkit-backface-visibility: visible;
-  -moz-transform-origin: center center;
-  -moz-backface-visibility: visible;
-}
-.side * {
-  pointer-events: none;
 }
 #dice-cube .side:nth-child(1) {
   -webkit-transform: translateY(37px) rotateX(90deg);
@@ -90,4 +108,167 @@ svg {
 #dice-cube .side:nth-child(6) {
   -webkit-transform: translateZ(-37px) rotateZ(0deg);
   -moz-transform: translateZ(-37px) rotateZ(0deg);
+}
+.hit-area {
+  cursor: pointer;
+}
+/*
+
+
+#card-display-area {
+  position: absolute;
+  top: 400px;
+  left: 50px;
+  width: 240px;
+  height: 368px;
+  border: 1px solid;
+  overflow: auto;
+}
+
+
+.game-board-area {
+  top: 140px;
+  left: 0px;
+  width: 700px;
+  height: 420px;
+  cursor: pointer;
+}
+*/
+.stripe-1 {
+  color: white;
+  background: repeating-linear-gradient(
+    45deg,
+    #606dbc,
+    #606dbc 10px,
+    #465298 10px,
+    #465298 20px
+  );
+}
+.stripe-2 {
+  color: black;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    #ccc 10px,
+    #ccc 20px
+  ),
+  linear-gradient(
+    to bottom,
+    #eee,
+    #999
+  )
+}
+.stripe-3 {
+  color: white;
+  background: repeating-radial-gradient(
+    circle,
+    purple,
+    purple 10px,
+    #4b026f 10px,
+    #4b026f 20px
+  );
+}
+.stripe-4 {
+  color: white;
+  background: repeating-linear-gradient(
+    -55deg,
+    #222,
+    #222 10px,
+    #333 10px,
+    #333 20px
+  );
+}
+.stripe-5 {
+  color: white;
+  background: linear-gradient(
+    to bottom,
+    #5d9634,
+    #5d9634 50%,
+    #538c2b 50%,
+    #538c2b
+  );
+  background-size: 100% 20px;
+}
+.stripe-6 {
+  color: black;
+  background: repeating-linear-gradient(
+    to right,
+    #f6ba52,
+    #f6ba52 10px,
+    #ffd180 10px,
+    #ffd180 20px
+  );
+}
+input
+{
+  font-size: 0.8em;
+  font-family: "Bree Serif";
+  width: 150px;
+}
+button
+{
+	font-size: 1.2em;
+	font-family: Bangers;
+	padding: 5px 7px;
+	margin: 5px 5px 5px 5px;
+	color: #ddd;
+	background-color: #555;
+	background: -webkit-linear-gradient(#888, #555);
+	background: linear-gradient(#888, #555);
+	border: 0 none;
+	border-radius: 3px;
+	text-shadow: 0 -1px 0 #000;
+	box-shadow: 0 1px 0 #666, 0 5px 0 #444, 0 6px 6px rgba(0,0,0,0.6);
+	cursor: pointer;
+	-webkit-transition: all 150ms ease;
+	transition: all 150ms ease;
+}
+.red-button
+{
+	font-size: 1.2em;
+	font-family: Bangers;
+	padding: 5px 7px;
+	margin: 10px 5px auto;
+	color: #ddd;
+	background-color: FireBrick;
+	background: -webkit-linear-gradient(Salmon, FireBrick);
+	background: linear-gradient(Salmon, FireBrick);
+	border: 0 none;
+	border-radius: 3px;
+	text-shadow: 0 -1px 0 #000;
+	box-shadow: 0 1px 0 IndianRed, 0 5px 0 DarkRed, 0 6px 6px rgba(0,0,0,0.6);
+	cursor: pointer;
+	-webkit-transition: all 150ms ease;
+	transition: all 150ms ease;
+}
+button:hover, button:focus
+{
+	-webkit-animation: pulsate 1.2s linear infinite;
+	animation: pulsate 1.2s linear infinite;
+}
+
+@-webkit-keyframes pulsate
+{
+	0%   { color: #ddd; text-shadow: 0 -1px 0 #000; }
+	50%  { color: #fff; text-shadow: 0 -1px 0 #444, 0 0 5px #ffd, 0 0 8px #fff; }
+	100% { color: #ddd; text-shadow: 0 -1px 0 #000; }
+}
+
+@keyframes pulsate
+{
+	0%   { color: #ddd; text-shadow: 0 -1px 0 #000; }
+	50%  { color: #fff; text-shadow: 0 -1px 0 #444, 0 0 5px #ffd, 0 0 8px #fff; }
+	100% { color: #ddd; text-shadow: 0 -1px 0 #000; }
+}
+
+button:active
+{
+	color: #fff;
+	text-shadow: 0 -1px 0 #444, 0 0 5px #ffd, 0 0 8px #fff;
+	box-shadow: 0 1px 0 #666, 0 2px 0 #444, 0 2px 2px rgba(0,0,0,0.9);
+	-webkit-transform: translateY(3px);
+	transform: translateY(3px);
+	-webkit-animation: none;
+	animation: none;
 }
