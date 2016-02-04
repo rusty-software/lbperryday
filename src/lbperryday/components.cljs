@@ -37,14 +37,18 @@
 
 (defn board-space [x y]
   ^{:key (str "space-" x "-" y)}
-  [:rect
+  [:g
+   {:dangerouslySetInnerHTML
+    {:__html (str "<rect x=\"" x "\" y=\"" y "\" width=\"125\" height=\"70\" fill=\"LightGray" #_(colors/random-color) "\" filter=\"url(#blurFilterBottomRight)\" />")}}]
+  #_[:rect
    {:x x
     :y y
     :width 125
     :height 70
     :stroke "black"
     :stroke-width 0.5
-    :fill "LightGray" #_(colors/random-color)}])
+    :filter "url(#blurFilter2)"
+    :fill #_"LightGray" (colors/random-color)}])
 
 #_(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
   ^{:key (str "player-" name)}

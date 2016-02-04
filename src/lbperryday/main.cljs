@@ -168,9 +168,6 @@
       .getBoundingClientRect))
 
 (defn move-name [player-data bcr x y]
-  (.log js/console bcr)
-  (println "x" x "y" y)
-  (println "left bcr" (.-left bcr) "top bcr" (.-top bcr))
   (assoc player-data :x (- x (.-left bcr)) :y (- y (.-top bcr))))
 
 (defn move-name! [svg-root game-state name]
@@ -279,6 +276,17 @@
      :width (:width board-dimensions)
      :height (:height board-dimensions)
      :style {:border "0.5px solid black"}}
+    [:defs
+     {:dangerouslySetInnerHTML
+      {:__html (str "<filter id=\"blurFilterBottomRight\" x=\"-10\" y=\"-10\" width=\"125\" height=\"70\" >"
+                     "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
+                     "  <feGaussianBlur in=\"offset2\" stdDeviation=\"3\" result=\"blur2\" />"
+                     "  <feMerge>"
+                     "    <feMergeNode in=\"blur2\" />"
+                     "    <feMergeNode in=\"SourceGraphic\" />"
+                     "  </feMerge>"
+                     "</filter>")}}
+     ]
     [:rect
        {:x 0
         :y 0
