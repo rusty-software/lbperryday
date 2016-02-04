@@ -1,5 +1,6 @@
 (ns lbperryday.components
-  (:require [goog.events :as events])
+  (:require [goog.events :as events]
+            [lbperryday.html-colors :as colors])
   (:import [goog.events EventType]))
 
 (def text-defaults {:font-size "x-small"})
@@ -33,6 +34,17 @@
            :x x
            :y y})
    name])
+
+(defn board-space [x y]
+  ^{:key (str "space-" x "-" y)}
+  [:rect
+   {:x x
+    :y y
+    :width 125
+    :height 70
+    :stroke "black"
+    :stroke-width 0.5
+    :fill "LightGray"}])
 
 #_(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
   ^{:key (str "player-" name)}

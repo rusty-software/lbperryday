@@ -184,12 +184,51 @@
 (def board-dimensions {:width 900
                        :height 600})
 
+(def piece-positions
+  [{:x 0 :y 60}
+   {:x 125 :y 60}
+   {:x 250 :y 60}
+   {:x 375 :y 60}
+   {:x 500 :y 60}
+   {:x 625 :y 60}
+   {:x 750 :y 60}
+   ;; transition 1
+   {:x 750 :y 130}
+   ;; row 2, right to left
+   {:x 750 :y 200}
+   {:x 625 :y 200}
+   {:x 500 :y 200}
+   {:x 375 :y 200}
+   {:x 250 :y 200}
+   {:x 125 :y 200}
+   {:x 0 :y 200}
+   ;; transition
+   {:x 0 :y 270}
+   ;; row 3, left to right
+   {:x 0 :y 340}
+   {:x 125 :y 340}
+   {:x 250 :y 340}
+   {:x 375 :y 340}
+   {:x 500 :y 340}
+   {:x 625 :y 340}
+   {:x 750 :y 340}
+   ;; transition
+   {:x 750 :y 410}
+   ;; row 4, right to left
+   {:x 750 :y 480}
+   {:x 625 :y 480}
+   {:x 500 :y 480}
+   {:x 375 :y 480}
+   {:x 250 :y 480}
+   {:x 125 :y 480}
+   {:x 0 :y 480}
+   ])
+
 (defn game-board []
   [:div
    {:class "board-area"}
    [:svg
-    {#_#_:view-box (str "0 0 " (:width board-dimensions) " " (:height board-dimensions))
-     :id "svg-box"
+    {:id "svg-box"
      :width (:width board-dimensions)
      :height (:height board-dimensions)
      :style {:border "0.5px solid black"}}
@@ -199,6 +238,9 @@
         :width (:width board-dimensions)
         :height (:height board-dimensions)
         :fill "DarkSeaGreen"}]
+    (for [i (range 31)]
+      (let [{:keys [x y]} (get piece-positions i)]
+        (c/board-space x y)))
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
