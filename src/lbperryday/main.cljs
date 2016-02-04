@@ -181,6 +181,16 @@
 (def board-dimensions {:width 900
                        :height 640})
 
+(defn generate-spiral-positions []
+  (concat
+    (for [i (range 7)]
+      {:x (+ 10 (* i 125))
+       :y 60})
+    (reverse
+      (for [i (range 5 -1 -1)]
+        {:x (+ 10 (* 6 125))
+         :y (+ 130 (* i 70))}))))
+
 (def spiral-positions
   [
    ;; top row, left to right
