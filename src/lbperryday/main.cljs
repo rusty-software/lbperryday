@@ -182,8 +182,54 @@
         (reset! app-state updated-game-state)))))
 
 (def board-dimensions {:width 900
-                       :height 600})
+                       :height 640})
 
+(def spiral-positions
+  [
+   ;; top row, left to right
+   {:x 0 :y 60}
+   {:x 125 :y 60}
+   {:x 250 :y 60}
+   {:x 375 :y 60}
+   {:x 500 :y 60}
+   {:x 625 :y 60}
+   {:x 750 :y 60}
+   ;; right column, top to bottom
+   {:x 750 :y 130}
+   {:x 750 :y 200}
+   {:x 750 :y 270}
+   {:x 750 :y 340}
+   {:x 750 :y 410}
+   {:x 750 :y 480}
+   ;; bottom row, right to left
+   {:x 750 :y 550}
+   {:x 625 :y 550}
+   {:x 500 :y 550}
+   {:x 375 :y 550}
+   {:x 250 :y 550}
+   {:x 125 :y 550}
+   ;; left column, bottom to top
+   {:x 0 :y 550}
+   {:x 0 :y 480}
+   {:x 0 :y 410}
+   {:x 0 :y 340}
+   {:x 0 :y 270}
+   ;; second row, right to left
+   {:x 0 :y 200}
+   {:x 125 :y 200}
+   {:x 250 :y 200}
+   {:x 375 :y 200}
+   ;;
+   {:x 500 :y 200}
+   {:x 500 :y 270}
+   {:x 500 :y 340}
+
+   {:x 500 :y 410}
+   {:x 375 :y 410}
+   {:x 250 :y 410}
+
+   {:x 250 :y 340}
+   ])
 (def piece-positions
   [{:x 0 :y 60}
    {:x 125 :y 60}
@@ -224,6 +270,7 @@
    {:x 0 :y 480}
    ])
 
+;; TODO: random fills should be set in atom, since they are recalculated with the mouse events
 (defn game-board []
   [:div
    {:class "board-area"}
@@ -238,8 +285,8 @@
         :width (:width board-dimensions)
         :height (:height board-dimensions)
         :fill "DarkSeaGreen"}]
-    (for [i (range 31)]
-      (let [{:keys [x y]} (get piece-positions i)]
+    (for [i (range (count spiral-positions))]
+      (let [{:keys [x y]} (get spiral-positions i)]
         (c/board-space x y)))
     (let [root (reagent/current-component)]
       (doall

@@ -44,7 +44,7 @@
     :height 70
     :stroke "black"
     :stroke-width 0.5
-    :fill "LightGray"}])
+    :fill "LightGray" #_(colors/random-color)}])
 
 #_(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
   ^{:key (str "player-" name)}
