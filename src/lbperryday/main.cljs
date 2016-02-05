@@ -25,8 +25,11 @@
 
 (defonce app-state (atom initial-game-state))
 
+(defn reset-game [_]
+  (assoc initial-game-state :draw-pile (shuffle-cards)))
+
 (defn reset-game! []
-  (reset! app-state initial-game-state))
+  (swap! app-state reset-game))
 
 (defn current-player [game-state]
   (first (:player-cycle game-state)))
