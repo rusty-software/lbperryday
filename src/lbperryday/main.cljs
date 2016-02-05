@@ -182,61 +182,38 @@
                        :height 640})
 
 (defn generate-spiral-positions []
-  (concat
-    (for [i (range 7)]
-      {:x (+ 10 (* i 125))
-       :y 60})
-    (reverse
-      (for [i (range 5 -1 -1)]
-        {:x (+ 10 (* 6 125))
-         :y (+ 130 (* i 70))}))))
+  (vec
+    (concat
+      (for [i (range 7)]
+        {:x (+ 10 (* i 125))
+         :y 60
+         :drop-shadow "blurFilterBottom"})
+      (for [i (range 6)]
+        {:x 760
+         :y (+ 130 (* i 70))
+         :drop-shadow "blurFilterRight"})
+      (for [i (range 6 0 -1)]
+        {:x (+ 10 (* i 125))
+         :y 550
+         :drop-shadow "blurFilterBottom"})
+      (for [i (range 6 1 -1)]
+        {:x 10
+         :y (+ 130 (* i 70))
+         :drop-shadow "blurFilterRight"})
+      (for [i (range 4)]
+        {:x (+ 10 (* i 125))
+         :y 200
+         :drop-shadow "blurFilterBottom"})
+      (for [i (range 1 4)]
+        {:x 510
+         :y (+ 130 (* i 70))
+         :drop-shadow "blurFilterRight"})
+      (for [i (range 4 1 -1)]
+        {:x (+ 10 (* i 125))
+         :y 410
+         :drop-shadow "blurFilterBottom"})
+      [{:x 260 :y 340 :drop-shadow "blurFilterRight"}])))
 
-(def spiral-positions
-  [
-   ;; top row, left to right
-   {:x 0 :y 60}
-   {:x 125 :y 60}
-   {:x 250 :y 60}
-   {:x 375 :y 60}
-   {:x 500 :y 60}
-   {:x 625 :y 60}
-   {:x 750 :y 60}
-   ;; right column, top to bottom
-   {:x 750 :y 130}
-   {:x 750 :y 200}
-   {:x 750 :y 270}
-   {:x 750 :y 340}
-   {:x 750 :y 410}
-   {:x 750 :y 480}
-   ;; bottom row, right to left
-   {:x 750 :y 550}
-   {:x 625 :y 550}
-   {:x 500 :y 550}
-   {:x 375 :y 550}
-   {:x 250 :y 550}
-   {:x 125 :y 550}
-   ;; left column, bottom to top
-   {:x 0 :y 550}
-   {:x 0 :y 480}
-   {:x 0 :y 410}
-   {:x 0 :y 340}
-   {:x 0 :y 270}
-   ;; second row, right to left
-   {:x 0 :y 200}
-   {:x 125 :y 200}
-   {:x 250 :y 200}
-   {:x 375 :y 200}
-   ;;
-   {:x 500 :y 200}
-   {:x 500 :y 270}
-   {:x 500 :y 340}
-
-   {:x 500 :y 410}
-   {:x 375 :y 410}
-   {:x 250 :y 410}
-
-   {:x 250 :y 340}
-   ])
 (def piece-positions
   [{:x 0 :y 60}
    {:x 125 :y 60}
@@ -277,6 +254,26 @@
    {:x 0 :y 480}
    ])
 
+(def bottom-drop-shadow
+  (str "<filter id=\"blurFilterBottom\" x=\"-10\" y=\"0\" width=\"100\" height=\"70\">"
+       "  <feOffset in=\"SourceAlpha\" dx=\"0\" dy=\"3\" result=\"offsetBottom\" />"
+       "  <feGaussianBlur in=\"offsetBottom\" stdDeviation=\"3\" result=\"blurBottom\" />"
+       "  <feMerge>"
+       "    <feMergeNode in=\"blurBottom\" />"
+       "    <feMergeNode in=\"SourceGraphic\" />"
+       "  </feMerge>"
+       "</filter>"))
+
+(def right-drop-shadow
+  (str "<filter id=\"blurFilterRight\" x=\"-10\" y=\"-1\" width=\"125\" height=\"70\">"
+       "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"0\" result=\"offsetRight\" />"
+       "  <feGaussianBlur in=\"offsetRight\" stdDeviation=\"3\" result=\"blurRight\" />"
+       "  <feMerge>"
+       "    <feMergeNode in=\"blurRight\" />"
+       "    <feMergeNode in=\"SourceGraphic\" />"
+       "  </feMerge>"
+       "</filter>"))
+
 ;; TODO: random fills should be set in atom, since they are recalculated with the mouse events
 (defn game-board []
   [:div
@@ -289,23 +286,27 @@
     [:defs
      {:dangerouslySetInnerHTML
       {:__html (str "<filter id=\"blurFilterBottomRight\" x=\"-10\" y=\"-10\" width=\"125\" height=\"70\" >"
-                     "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
-                     "  <feGaussianBlur in=\"offset2\" stdDeviation=\"3\" result=\"blur2\" />"
-                     "  <feMerge>"
-                     "    <feMergeNode in=\"blur2\" />"
-                     "    <feMergeNode in=\"SourceGraphic\" />"
-                     "  </feMerge>"
-                     "</filter>")}}
-     ]
+                    "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
+                    "  <feGaussianBlur in=\"offset2\" stdDeviation=\"3\" result=\"blur2\" />"
+                    "  <feMerge>"
+                    "    <feMergeNode in=\"blur2\" />"
+                    "    <feMergeNode in=\"SourceGraphic\" />"
+                    "  </feMerge>"
+                    "</filter>"
+                    " "
+                    bottom-drop-shadow
+                    " "
+                    right-drop-shadow)}}]
     [:rect
        {:x 0
         :y 0
         :width (:width board-dimensions)
         :height (:height board-dimensions)
         :fill "DarkSeaGreen"}]
-    (for [i (range (count spiral-positions))]
-      (let [{:keys [x y]} (get spiral-positions i)]
-        (c/board-space x y)))
+    (let [positions (generate-spiral-positions)]
+      (for [i (range (count positions))]
+        (let [{:keys [x y drop-shadow]} (get positions i)]
+          (c/board-space x y drop-shadow))))
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
