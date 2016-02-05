@@ -125,32 +125,34 @@
       (for [i (range 6)]
         {:x (+ 10 (* i 125))
          :y 60
-         #_#_:drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterBottom"})
       (for [i (range 7)]
         {:x 760
          :y (+ 60 (* i 70))
-         :drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterRight"})
       (for [i (range 6 0 -1)]
         {:x (+ 10 (* i 125))
          :y 550
-         :drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterBottom"})
       (for [i (range 6 1 -1)]
         {:x 10
          :y (+ 130 (* i 70))
-         :drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterSurround"})
       (for [i (range 4)]
         {:x (+ 10 (* i 125))
          :y 200
-         :drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterSurround"})
       (for [i (range 1 4)]
         {:x 510
          :y (+ 130 (* i 70))
-         :drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterSurround"})
       (for [i (range 4 1 -1)]
         {:x (+ 10 (* i 125))
          :y 410
-         :drop-shadow "blurFilterSurround"})
-      [{:x 260 :y 340 :drop-shadow "blurFilterSurround"}])))
+         #_#_:drop-shadow "blurFilterSurround"})
+      [{:x 260
+        :y 340
+        #_#_:drop-shadow "blurFilterSurround"}])))
 
 (def piece-positions
   [{:x 0 :y 60}
@@ -192,9 +194,19 @@
    {:x 0 :y 480}
    ])
 
+(def bottom-right-drop-shadow
+  (str "<filter id=\"blurFilterBottomRight\" x=\"-10\" y=\"-10\" width=\"125\" height=\"70\" >"
+                    "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
+                    "  <feGaussianBlur in=\"offset2\" stdDeviation=\"3\" result=\"blur2\" />"
+                    "  <feMerge>"
+                    "    <feMergeNode in=\"blur2\" />"
+                    "    <feMergeNode in=\"SourceGraphic\" />"
+                    "  </feMerge>"
+                    "</filter>"))
+
 (def bottom-drop-shadow
-  (str "<filter id=\"blurFilterBottom\" x=\"-10\" y=\"0\" width=\"100\" height=\"70\">"
-       "  <feOffset in=\"SourceAlpha\" dx=\"0\" dy=\"3\" result=\"offsetBottom\" />"
+  (str "<filter id=\"blurFilterBottom\" x=\"0\" y=\"0\" width=\"122\" height=\"70\">"
+       "  <feOffset in=\"SourceAlpha\" dx=\"0\" dy=\"0\" result=\"offsetBottom\" />"
        "  <feGaussianBlur in=\"offsetBottom\" stdDeviation=\"3\" result=\"blurBottom\" />"
        "  <feMerge>"
        "    <feMergeNode in=\"blurBottom\" />"
@@ -203,7 +215,7 @@
        "</filter>"))
 
 (def right-drop-shadow
-  (str "<filter id=\"blurFilterRight\" x=\"-10\" y=\"-1\" width=\"125\" height=\"70\">"
+  (str "<filter id=\"blurFilterRight\" x=\"0\" y=\"0\" width=\"125\" height=\"70\">"
        "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"0\" result=\"offsetRight\" />"
        "  <feGaussianBlur in=\"offsetRight\" stdDeviation=\"3\" result=\"blurRight\" />"
        "  <feMerge>"
@@ -233,14 +245,7 @@
      :style {:border "0.5px solid black"}}
     [:defs
      {:dangerouslySetInnerHTML
-      {:__html (str "<filter id=\"blurFilterBottomRight\" x=\"-10\" y=\"-10\" width=\"125\" height=\"70\" >"
-                    "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
-                    "  <feGaussianBlur in=\"offset2\" stdDeviation=\"3\" result=\"blur2\" />"
-                    "  <feMerge>"
-                    "    <feMergeNode in=\"blur2\" />"
-                    "    <feMergeNode in=\"SourceGraphic\" />"
-                    "  </feMerge>"
-                    "</filter>"
+      {:__html (str bottom-drop-shadow
                     " "
                     bottom-drop-shadow
                     " "
