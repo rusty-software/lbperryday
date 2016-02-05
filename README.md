@@ -6,6 +6,13 @@ A video game about how to live LBPERRYDAY
 
 This might very well be the best vidya game ever.  Play the game by visiting [rusty-software.github.io/lbperryday/](http://rusty-software.github.io/lbperryday/)
 
+## TODOS/SUGGESTIONS:
+
+* Make the final space have a picture of a girl on a cliff, or an arts and crafts magazine, or random
+* Add colors/random fills to spaces
+* Fix the player meeples
+* When a player ends their turn on the final space, winner should be declared
+
 ## Development Details
 
 This is a figwheel/reagent project.  Pointers about how to get it going locally are below (and came from the README template).
