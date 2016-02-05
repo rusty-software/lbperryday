@@ -2,17 +2,31 @@
   (:require [reagent.core :as reagent :refer [atom]]
             [clojure.string :as str]
             [lbperryday.dice :as dice]
+            [lbperryday.cards :as cards]
             [lbperryday.components :as c]))
 
 (enable-console-print!)
 (defn not-implemented [function-name]
   (println function-name "is not implemented!"))
 
-(defonce app-state (atom {:current-dice (first dice/dice-specs)
+(defn shuffle-cards []
+  (let [queue #queue []]
+    (apply conj queue (shuffle cards/cards))))
+
+(def initial-game-state {:current-dice (first dice/dice-specs)
                           :roll-history '()
                           :add-player-name nil
                           :players []
-                          :game-on? false}))
+                          :player-cycle nil
+                          :player-data nil
+                          :draw-pile (shuffle-cards)
+                          :discard-pile nil
+                          :game-on? false})
+
+(defonce app-state (atom initial-game-state))
+
+(defn reset-game! []
+  (reset! app-state initial-game-state))
 
 (defn current-player [game-state]
   (first (:player-cycle game-state)))
@@ -31,7 +45,7 @@
 (defn update-player-name [game-state name]
   (assoc game-state :add-player-name name))
 
-(defn update-player-name! [name ]
+(defn update-player-name! [name]
   (swap! app-state update-player-name name))
 
 (defn player-queue [players]
@@ -41,10 +55,11 @@
 (defn initial-player-data-map [players]
   (loop [player-data {}
          players players
+         x 50
          y 20]
     (if (empty? players)
       player-data
-      (recur (assoc player-data (first players) {:x 50 :y y}) (rest players) (+ y 20)))))
+      (recur (assoc player-data (first players) {:x x :y y}) (rest players) (+ x 50) y))))
 
 (defn initial-state [game-state]
   (assoc game-state :game-on? true
@@ -64,18 +79,6 @@
     (when (= 6 (count (:players @app-state)))
       (start-game!))))
 
-(defn reset-game [game-state]
-  (assoc game-state :current-dice (first dice/dice-specs)
-                    :roll-history []
-                    :add-player-name nil
-                    :players []
-                    :player-cycle nil
-                    :player-data nil
-                    :game-on? false))
-
-(defn reset-game! []
-  (swap! app-state reset-game))
-
 (defn next-player [game-state]
   (let [current-player (peek (:player-cycle game-state))
         updated-queue (pop (:player-cycle game-state))]
@@ -84,8 +87,17 @@
 (defn next-player! []
   (swap! app-state next-player))
 
+(defn draw-card [game-state]
+  (let [drawn-card (peek (:draw-pile game-state))
+        updated-draw-pile (pop (:draw-pile game-state))
+        updated-discard-pile (conj (:discard-pile game-state) drawn-card)]
+    (println "first draw-pile:" (first updated-draw-pile))
+    (println "first discard-pile:" (first updated-discard-pile))
+    (assoc game-state :draw-pile updated-draw-pile
+                      :discard-pile updated-discard-pile)))
+
 (defn draw-card! []
-  (not-implemented "draw-card!"))
+  (swap! app-state draw-card))
 
 (defn current-dice-transform [key]
   (get-in @app-state [:current-dice :transform key]))
@@ -322,6 +334,8 @@
          "Give Up!"]]
        [:div
         (str (current-player @app-state) ", it's your turn.")]
+       [:div
+        (str "Current card: " (:title (peek (:discard-pile @app-state))))]
        ]
 
       [:div
