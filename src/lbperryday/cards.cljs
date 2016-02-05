@@ -5,7 +5,7 @@
             {:title "STOP LOOKING AT MY CARDS!"
              :body "You get caught looking at Curtis's cards; lose a turn, unless you're playing as Curtis, in which case, take another drink and roll again."}
             {:title "Bill's Naughty Past"
-             :body "Bill becomes suspiciously aroused while perusing a copy of "Bovine Boudoir."  If you're playing as Bill, lose a turn, unless you can convince everyone else playing that you really don't miss teat dipping (ruling by simple majority), in which case, take another peak at a magazine and roll again."}
+             :body "Bill becomes suspiciously aroused while perusing a copy of \"Bovine Boudoir.\"  If you're playing as Bill, lose a turn, unless you can convince everyone else playing that you really don't miss teat dipping (ruling by simple majority), in which case, take another peak at a magazine and roll again."}
             {:title "40-Yard Dash"
              :body "Drunk Chase and Drunk Phil decide to race down the 40-yard hallway.  Roll the dice twice (if either Chase or Phil are playing, they get to roll) -- highest roll wins the race.  Everyone else must cheer for your preferred stallion. Winner moves forward two spaces, loser moves forward one.  In either case, players for Phil and Chase take a drink.  Anyone that did NOT race or cheer moves back a space."}
             {:title "Conference Calls"
@@ -17,7 +17,7 @@
             {:title "Arts And Crafts"
              :body "Everyone that has legitimately participated in Arts and Crafts activities this year moves forward one space (simple majority judges participation level)."}
             {:title "Man Down!"
-             :body "You throw a beer to someone in the pool, but overshoot.  The beer lands somewhere it cannot be found.  Lose a turn unless you're playing as Damon, in which case yell "I've rescued the Man Down!" and take another drink and turn."}
+             :body "You throw a beer to someone in the pool, but overshoot.  The beer lands somewhere it cannot be found.  Lose a turn unless you're playing as Damon, in which case yell \"I've rescued the Man Down!\" and take another drink and turn."}
             {:title "A New(d) Business Venture"
              :body "Bill and Keith begin talking about what they've been up to this year, and suddenly realize that they're both silent partners in a teat dipping professional services consultancy.  They celebrate their new partnership by playing Civ 5 for the rest of LBP.  Lose a turn if you're playing as either Bill or Keith, unless you can prove you aren't in any business venture together, in which case take a drink and roll again."}
             {:title "Neverending Guac"
