@@ -26,7 +26,14 @@ h1 {
   left: 920px;
   width: 500px;
 }
-
+.card-area {
+  font-family: "Roboto Slab";
+  font-size: medium;
+  border: 1px solid;
+  margin: 10px;
+  padding: 10px;
+  background: Ivory;
+}
 #dice-roll-area {
   position: absolute;
   top: 470px;
