@@ -166,46 +166,6 @@
         :y 340
         #_#_:drop-shadow "blurFilterSurround"}])))
 
-(def piece-positions
-  [{:x 0 :y 60}
-   {:x 125 :y 60}
-   {:x 250 :y 60}
-   {:x 375 :y 60}
-   {:x 500 :y 60}
-   {:x 625 :y 60}
-   {:x 750 :y 60}
-   ;; transition 1
-   {:x 750 :y 130}
-   ;; row 2, right to left
-   {:x 750 :y 200}
-   {:x 625 :y 200}
-   {:x 500 :y 200}
-   {:x 375 :y 200}
-   {:x 250 :y 200}
-   {:x 125 :y 200}
-   {:x 0 :y 200}
-   ;; transition
-   {:x 0 :y 270}
-   ;; row 3, left to right
-   {:x 0 :y 340}
-   {:x 125 :y 340}
-   {:x 250 :y 340}
-   {:x 375 :y 340}
-   {:x 500 :y 340}
-   {:x 625 :y 340}
-   {:x 750 :y 340}
-   ;; transition
-   {:x 750 :y 410}
-   ;; row 4, right to left
-   {:x 750 :y 480}
-   {:x 625 :y 480}
-   {:x 500 :y 480}
-   {:x 375 :y 480}
-   {:x 250 :y 480}
-   {:x 125 :y 480}
-   {:x 0 :y 480}
-   ])
-
 (def bottom-right-drop-shadow
   (str "<filter id=\"blurFilterBottomRight\" x=\"-10\" y=\"-10\" width=\"125\" height=\"70\" >"
                     "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
@@ -334,9 +294,13 @@
          "Give Up!"]]
        [:div
         (str (current-player @app-state) ", it's your turn.")]
-       [:div
-        (str "Current card: " (:title (peek (:discard-pile @app-state))))]
-       ]
+       (let [current-card (peek (:discard-pile @app-state))]
+         [:div
+          {:id    "card-area"
+           :class "card-area"}
+          [:h3
+           (:title current-card)]
+          (:body current-card)])]
 
       [:div
        [:div
