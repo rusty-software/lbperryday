@@ -39,7 +39,11 @@
   ^{:key (str "space-" x "-" y)}
   [:g
    {:dangerouslySetInnerHTML
-    {:__html (str "<rect x=\"" x "\" y=\"" y "\" width=\"125\" height=\"70\" fill=\"LightGray" #_(colors/random-color) "\" filter=\"url(#" drop-shadow ")\" />")}}]
+
+    {:__html (str "<rect x=\"" x "\" y=\"" y "\" width=\"125\" height=\"70\" stroke=\"black\" stroke-width=\"0.5px\" fill=\"LightGray" #_(colors/random-color) "\""
+                  (when drop-shadow
+                    " filter=\"url(#") drop-shadow ")\""
+                  " />")}}]
   #_[:rect
    {:x x
     :y y
