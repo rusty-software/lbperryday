@@ -1,55 +1,14 @@
 (ns lbperryday.main
   (:require [reagent.core :as reagent :refer [atom]]
             [clojure.string :as str]
-            [lbperryday.html-colors :as colors]
+            [lbperryday.dice :as dice]
             [lbperryday.components :as c]))
 
 (enable-console-print!)
 (defn not-implemented [function-name]
   (println function-name "is not implemented!"))
 
-(def dice-specs
-  [{:color (get colors/dice-colors 0)
-    :dots [{:x 37 :y 37}]
-    :val 1
-    :transform {:rx 145 :ry -45 :rz 0}}
-   {:color (get colors/dice-colors 1)
-    :dots [{:x 14.25 :y 57.5}
-           {:x 56.75 :y 16.5}]
-    :val 2
-    :transform {:rx -45 :ry 50 :rz 0}}
-   {:color (get colors/dice-colors 2)
-    :dots [{:x 14.25 :y 57.5}
-           {:x 37 :y 37}
-           {:x 56.75 :y 16.5}]
-    :val 3
-    :transform {:rx -45 :ry 225 :rz -90}}
-   {:color (get colors/dice-colors 3)
-    :dots [{:x 14.27 :y 16.5}
-           {:x 14.25 :y 57.5}
-           {:x 56.75 :y 16.5}
-           {:x 56.75 :y 57.5}]
-    :val 4
-    :transform {:rx -45 :ry 50 :rz 90}}
-   {:color (get colors/dice-colors 4)
-    :dots [{:x 14.27 :y 16.5}
-           {:x 14.25 :y 57.5}
-           {:x 37 :y 37}
-           {:x 56.75 :y 16.5}
-           {:x 56.75 :y 57.5}]
-    :val 5
-    :transform {:rx 50 :ry 0 :rz 50}}
-   {:color (get colors/dice-colors 5)
-    :dots [{:x 14.27 :y 16.5}
-           {:x 14.27 :y 37}
-           {:x 14.25 :y 57.5}
-           {:x 56.75 :y 16.5}
-           {:x 56.75 :y 37}
-           {:x 56.75 :y 57.5}]
-    :val 6
-    :transform {:rx 45 :ry 180 :rz -45}}])
-
-(defonce app-state (atom {:current-dice (first dice-specs)
+(defonce app-state (atom {:current-dice (first dice/dice-specs)
                           :roll-history '()
                           :add-player-name nil
                           :players []
@@ -64,7 +23,7 @@
 
 (defn roll-dice [game-state]
   (let [roll (rand-int 6)]
-    (assoc game-state :current-dice (get dice-specs roll)
+    (assoc game-state :current-dice (get dice/dice-specs roll)
                       :roll-history (take 3 (conj (:roll-history game-state) (roll-history-row roll))))))
 (defn roll-dice! []
   (swap! app-state roll-dice))
@@ -106,7 +65,7 @@
       (start-game!))))
 
 (defn reset-game [game-state]
-  (assoc game-state :current-dice (first dice-specs)
+  (assoc game-state :current-dice (first dice/dice-specs)
                     :roll-history []
                     :add-player-name nil
                     :players []
@@ -141,27 +100,6 @@
     ""
     " hidden"))
 
-(defn dice-side
-  ([side-color dots]
-   ^{:key side-color}
-   [:svg
-    {:class "dice-svg side"
-     :width 100
-     :height 100}
-    [:rect
-     {:width 74
-      :height 74
-      :fill side-color}]
-    (for [dot dots]
-      ^{:key dot}
-      [:circle
-       {:cx (:x dot)
-        :cy (:y dot)
-        :r 6
-        :fill "snow"}])])
-  ([side-spec]
-   (dice-side (:color side-spec) (:dots side-spec))))
-
 (defn get-bcr [svg-root]
   (-> svg-root
       reagent/dom-node
@@ -182,61 +120,38 @@
                        :height 640})
 
 (defn generate-spiral-positions []
-  (concat
-    (for [i (range 7)]
-      {:x (+ 10 (* i 125))
-       :y 60})
-    (reverse
-      (for [i (range 5 -1 -1)]
-        {:x (+ 10 (* 6 125))
-         :y (+ 130 (* i 70))}))))
+  (vec
+    (concat
+      (for [i (range 6)]
+        {:x (+ 10 (* i 125))
+         :y 60
+         #_#_:drop-shadow "blurFilterSurround"})
+      (for [i (range 7)]
+        {:x 760
+         :y (+ 60 (* i 70))
+         :drop-shadow "blurFilterSurround"})
+      (for [i (range 6 0 -1)]
+        {:x (+ 10 (* i 125))
+         :y 550
+         :drop-shadow "blurFilterSurround"})
+      (for [i (range 6 1 -1)]
+        {:x 10
+         :y (+ 130 (* i 70))
+         :drop-shadow "blurFilterSurround"})
+      (for [i (range 4)]
+        {:x (+ 10 (* i 125))
+         :y 200
+         :drop-shadow "blurFilterSurround"})
+      (for [i (range 1 4)]
+        {:x 510
+         :y (+ 130 (* i 70))
+         :drop-shadow "blurFilterSurround"})
+      (for [i (range 4 1 -1)]
+        {:x (+ 10 (* i 125))
+         :y 410
+         :drop-shadow "blurFilterSurround"})
+      [{:x 260 :y 340 :drop-shadow "blurFilterSurround"}])))
 
-(def spiral-positions
-  [
-   ;; top row, left to right
-   {:x 0 :y 60}
-   {:x 125 :y 60}
-   {:x 250 :y 60}
-   {:x 375 :y 60}
-   {:x 500 :y 60}
-   {:x 625 :y 60}
-   {:x 750 :y 60}
-   ;; right column, top to bottom
-   {:x 750 :y 130}
-   {:x 750 :y 200}
-   {:x 750 :y 270}
-   {:x 750 :y 340}
-   {:x 750 :y 410}
-   {:x 750 :y 480}
-   ;; bottom row, right to left
-   {:x 750 :y 550}
-   {:x 625 :y 550}
-   {:x 500 :y 550}
-   {:x 375 :y 550}
-   {:x 250 :y 550}
-   {:x 125 :y 550}
-   ;; left column, bottom to top
-   {:x 0 :y 550}
-   {:x 0 :y 480}
-   {:x 0 :y 410}
-   {:x 0 :y 340}
-   {:x 0 :y 270}
-   ;; second row, right to left
-   {:x 0 :y 200}
-   {:x 125 :y 200}
-   {:x 250 :y 200}
-   {:x 375 :y 200}
-   ;;
-   {:x 500 :y 200}
-   {:x 500 :y 270}
-   {:x 500 :y 340}
-
-   {:x 500 :y 410}
-   {:x 375 :y 410}
-   {:x 250 :y 410}
-
-   {:x 250 :y 340}
-   ])
 (def piece-positions
   [{:x 0 :y 60}
    {:x 125 :y 60}
@@ -277,6 +192,36 @@
    {:x 0 :y 480}
    ])
 
+(def bottom-drop-shadow
+  (str "<filter id=\"blurFilterBottom\" x=\"-10\" y=\"0\" width=\"100\" height=\"70\">"
+       "  <feOffset in=\"SourceAlpha\" dx=\"0\" dy=\"3\" result=\"offsetBottom\" />"
+       "  <feGaussianBlur in=\"offsetBottom\" stdDeviation=\"3\" result=\"blurBottom\" />"
+       "  <feMerge>"
+       "    <feMergeNode in=\"blurBottom\" />"
+       "    <feMergeNode in=\"SourceGraphic\" />"
+       "  </feMerge>"
+       "</filter>"))
+
+(def right-drop-shadow
+  (str "<filter id=\"blurFilterRight\" x=\"-10\" y=\"-1\" width=\"125\" height=\"70\">"
+       "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"0\" result=\"offsetRight\" />"
+       "  <feGaussianBlur in=\"offsetRight\" stdDeviation=\"3\" result=\"blurRight\" />"
+       "  <feMerge>"
+       "    <feMergeNode in=\"blurRight\" />"
+       "    <feMergeNode in=\"SourceGraphic\" />"
+       "  </feMerge>"
+       "</filter>"))
+
+(def surround-drop-shadow
+  (str "<filter id=\"blurFilterSurround\" x=\"-1\" y=\"-1\" width=\"126\" height=\"71\">"
+       "  <feOffset in=\"SourceAlpha\" dx=\"1\" dy=\"1\" result=\"offsetSurround\" />"
+       "  <feGaussianBlur in=\"offsetRight\" stdDeviation=\"3\" result=\"blurSurround\" />"
+       "  <feMerge>"
+       "    <feMergeNode in=\"blurSurround\" />"
+       "    <feMergeNode in=\"SourceGraphic\" />"
+       "  </feMerge>"
+       "</filter>"))
+
 ;; TODO: random fills should be set in atom, since they are recalculated with the mouse events
 (defn game-board []
   [:div
@@ -289,23 +234,29 @@
     [:defs
      {:dangerouslySetInnerHTML
       {:__html (str "<filter id=\"blurFilterBottomRight\" x=\"-10\" y=\"-10\" width=\"125\" height=\"70\" >"
-                     "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
-                     "  <feGaussianBlur in=\"offset2\" stdDeviation=\"3\" result=\"blur2\" />"
-                     "  <feMerge>"
-                     "    <feMergeNode in=\"blur2\" />"
-                     "    <feMergeNode in=\"SourceGraphic\" />"
-                     "  </feMerge>"
-                     "</filter>")}}
-     ]
+                    "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
+                    "  <feGaussianBlur in=\"offset2\" stdDeviation=\"3\" result=\"blur2\" />"
+                    "  <feMerge>"
+                    "    <feMergeNode in=\"blur2\" />"
+                    "    <feMergeNode in=\"SourceGraphic\" />"
+                    "  </feMerge>"
+                    "</filter>"
+                    " "
+                    bottom-drop-shadow
+                    " "
+                    right-drop-shadow
+                    " "
+                    surround-drop-shadow)}}]
     [:rect
        {:x 0
         :y 0
         :width (:width board-dimensions)
         :height (:height board-dimensions)
         :fill "DarkSeaGreen"}]
-    (for [i (range (count spiral-positions))]
-      (let [{:keys [x y]} (get spiral-positions i)]
-        (c/board-space x y)))
+    (let [positions (generate-spiral-positions)]
+      (for [i (range (count positions))]
+        (let [{:keys [x y drop-shadow]} (get positions i)]
+          (c/board-space x y drop-shadow))))
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
@@ -381,8 +332,8 @@
                                   "deg) rotateZ("
                                   (current-dice-transform :rz)
                                   "deg)")}}
-         (for [side-spec dice-specs]
-           (dice-side side-spec))]]
+         (for [side-spec dice/dice-specs]
+           (dice/dice-side side-spec))]]
        [:div
         {:id "dice-result"}
         (for [roll (:roll-history @app-state)]
