@@ -2,17 +2,31 @@
   (:require [reagent.core :as reagent :refer [atom]]
             [clojure.string :as str]
             [lbperryday.dice :as dice]
+            [lbperryday.cards :as cards]
             [lbperryday.components :as c]))
 
 (enable-console-print!)
 (defn not-implemented [function-name]
   (println function-name "is not implemented!"))
 
-(defonce app-state (atom {:current-dice (first dice/dice-specs)
+(defn shuffle-cards []
+  (let [queue #queue []]
+    (apply conj queue (shuffle cards/cards))))
+
+(def initial-game-state {:current-dice (first dice/dice-specs)
                           :roll-history '()
                           :add-player-name nil
                           :players []
-                          :game-on? false}))
+                          :player-cycle nil
+                          :player-data nil
+                          :draw-pile (shuffle-cards)
+                          :discard-pile nil
+                          :game-on? false})
+
+(defonce app-state (atom initial-game-state))
+
+(defn reset-game! []
+  (reset! app-state initial-game-state))
 
 (defn current-player [game-state]
   (first (:player-cycle game-state)))
@@ -31,7 +45,7 @@
 (defn update-player-name [game-state name]
   (assoc game-state :add-player-name name))
 
-(defn update-player-name! [name ]
+(defn update-player-name! [name]
   (swap! app-state update-player-name name))
 
 (defn player-queue [players]
@@ -41,10 +55,11 @@
 (defn initial-player-data-map [players]
   (loop [player-data {}
          players players
+         x 50
          y 20]
     (if (empty? players)
       player-data
-      (recur (assoc player-data (first players) {:x 50 :y y}) (rest players) (+ y 20)))))
+      (recur (assoc player-data (first players) {:x x :y y}) (rest players) (+ x 50) y))))
 
 (defn initial-state [game-state]
   (assoc game-state :game-on? true
@@ -64,18 +79,6 @@
     (when (= 6 (count (:players @app-state)))
       (start-game!))))
 
-(defn reset-game [game-state]
-  (assoc game-state :current-dice (first dice/dice-specs)
-                    :roll-history []
-                    :add-player-name nil
-                    :players []
-                    :player-cycle nil
-                    :player-data nil
-                    :game-on? false))
-
-(defn reset-game! []
-  (swap! app-state reset-game))
-
 (defn next-player [game-state]
   (let [current-player (peek (:player-cycle game-state))
         updated-queue (pop (:player-cycle game-state))]
@@ -84,8 +87,17 @@
 (defn next-player! []
   (swap! app-state next-player))
 
+(defn draw-card [game-state]
+  (let [drawn-card (peek (:draw-pile game-state))
+        updated-draw-pile (pop (:draw-pile game-state))
+        updated-discard-pile (conj (:discard-pile game-state) drawn-card)]
+    (println "first draw-pile:" (first updated-draw-pile))
+    (println "first discard-pile:" (first updated-discard-pile))
+    (assoc game-state :draw-pile updated-draw-pile
+                      :discard-pile updated-discard-pile)))
+
 (defn draw-card! []
-  (not-implemented "draw-card!"))
+  (swap! app-state draw-card))
 
 (defn current-dice-transform [key]
   (get-in @app-state [:current-dice :transform key]))
@@ -125,76 +137,48 @@
       (for [i (range 6)]
         {:x (+ 10 (* i 125))
          :y 60
-         #_#_:drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterBottom"})
       (for [i (range 7)]
         {:x 760
          :y (+ 60 (* i 70))
-         :drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterRight"})
       (for [i (range 6 0 -1)]
         {:x (+ 10 (* i 125))
          :y 550
-         :drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterBottom"})
       (for [i (range 6 1 -1)]
         {:x 10
          :y (+ 130 (* i 70))
-         :drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterSurround"})
       (for [i (range 4)]
         {:x (+ 10 (* i 125))
          :y 200
-         :drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterSurround"})
       (for [i (range 1 4)]
         {:x 510
          :y (+ 130 (* i 70))
-         :drop-shadow "blurFilterSurround"})
+         #_#_:drop-shadow "blurFilterSurround"})
       (for [i (range 4 1 -1)]
         {:x (+ 10 (* i 125))
          :y 410
-         :drop-shadow "blurFilterSurround"})
-      [{:x 260 :y 340 :drop-shadow "blurFilterSurround"}])))
+         #_#_:drop-shadow "blurFilterSurround"})
+      [{:x 260
+        :y 340
+        #_#_:drop-shadow "blurFilterSurround"}])))
 
-(def piece-positions
-  [{:x 0 :y 60}
-   {:x 125 :y 60}
-   {:x 250 :y 60}
-   {:x 375 :y 60}
-   {:x 500 :y 60}
-   {:x 625 :y 60}
-   {:x 750 :y 60}
-   ;; transition 1
-   {:x 750 :y 130}
-   ;; row 2, right to left
-   {:x 750 :y 200}
-   {:x 625 :y 200}
-   {:x 500 :y 200}
-   {:x 375 :y 200}
-   {:x 250 :y 200}
-   {:x 125 :y 200}
-   {:x 0 :y 200}
-   ;; transition
-   {:x 0 :y 270}
-   ;; row 3, left to right
-   {:x 0 :y 340}
-   {:x 125 :y 340}
-   {:x 250 :y 340}
-   {:x 375 :y 340}
-   {:x 500 :y 340}
-   {:x 625 :y 340}
-   {:x 750 :y 340}
-   ;; transition
-   {:x 750 :y 410}
-   ;; row 4, right to left
-   {:x 750 :y 480}
-   {:x 625 :y 480}
-   {:x 500 :y 480}
-   {:x 375 :y 480}
-   {:x 250 :y 480}
-   {:x 125 :y 480}
-   {:x 0 :y 480}
-   ])
+(def bottom-right-drop-shadow
+  (str "<filter id=\"blurFilterBottomRight\" x=\"-10\" y=\"-10\" width=\"125\" height=\"70\" >"
+                    "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
+                    "  <feGaussianBlur in=\"offset2\" stdDeviation=\"3\" result=\"blur2\" />"
+                    "  <feMerge>"
+                    "    <feMergeNode in=\"blur2\" />"
+                    "    <feMergeNode in=\"SourceGraphic\" />"
+                    "  </feMerge>"
+                    "</filter>"))
 
 (def bottom-drop-shadow
-  (str "<filter id=\"blurFilterBottom\" x=\"-10\" y=\"0\" width=\"100\" height=\"70\">"
-       "  <feOffset in=\"SourceAlpha\" dx=\"0\" dy=\"3\" result=\"offsetBottom\" />"
+  (str "<filter id=\"blurFilterBottom\" x=\"0\" y=\"0\" width=\"122\" height=\"70\">"
+       "  <feOffset in=\"SourceAlpha\" dx=\"0\" dy=\"0\" result=\"offsetBottom\" />"
        "  <feGaussianBlur in=\"offsetBottom\" stdDeviation=\"3\" result=\"blurBottom\" />"
        "  <feMerge>"
        "    <feMergeNode in=\"blurBottom\" />"
@@ -203,7 +187,7 @@
        "</filter>"))
 
 (def right-drop-shadow
-  (str "<filter id=\"blurFilterRight\" x=\"-10\" y=\"-1\" width=\"125\" height=\"70\">"
+  (str "<filter id=\"blurFilterRight\" x=\"0\" y=\"0\" width=\"125\" height=\"70\">"
        "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"0\" result=\"offsetRight\" />"
        "  <feGaussianBlur in=\"offsetRight\" stdDeviation=\"3\" result=\"blurRight\" />"
        "  <feMerge>"
@@ -233,14 +217,7 @@
      :style {:border "0.5px solid black"}}
     [:defs
      {:dangerouslySetInnerHTML
-      {:__html (str "<filter id=\"blurFilterBottomRight\" x=\"-10\" y=\"-10\" width=\"125\" height=\"70\" >"
-                    "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
-                    "  <feGaussianBlur in=\"offset2\" stdDeviation=\"3\" result=\"blur2\" />"
-                    "  <feMerge>"
-                    "    <feMergeNode in=\"blur2\" />"
-                    "    <feMergeNode in=\"SourceGraphic\" />"
-                    "  </feMerge>"
-                    "</filter>"
+      {:__html (str bottom-drop-shadow
                     " "
                     bottom-drop-shadow
                     " "
@@ -317,7 +294,13 @@
          "Give Up!"]]
        [:div
         (str (current-player @app-state) ", it's your turn.")]
-       ]
+       (let [current-card (peek (:discard-pile @app-state))]
+         [:div
+          {:id    "card-area"
+           :class "card-area"}
+          [:h3
+           (:title current-card)]
+          (:body current-card)])]
 
       [:div
        [:div

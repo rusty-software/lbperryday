@@ -7,6 +7,7 @@ pom.xml
 /out/
 /target/
 .idea/
+*.iml
 .lein-deps-sum
 .lein-repl-history
 .lein-plugins/
