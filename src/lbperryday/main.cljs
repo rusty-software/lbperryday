@@ -4,6 +4,7 @@
             [lbperryday.cards :as cards]
             [lbperryday.components :as c]
             [lbperryday.dice :as dice]
+            [lbperryday.help :as help]
             [lbperryday.html-colors :as colors]))
 
 (enable-console-print!)
@@ -171,13 +172,25 @@
     ""
     " hidden"))
 
+(defn showing-help []
+  (if (:show-help? @app-state)
+    ""
+    " hidden"))
+
+(defn toggle-help [game-state]
+  (assoc game-state :show-help? (not (:show-help? game-state))))
+
+(defn toggle-help! []
+  (swap! app-state toggle-help))
+
 (defn get-bcr [svg-root]
   (-> svg-root
       reagent/dom-node
       .getBoundingClientRect))
 
 (defn move-name [player-data bcr x y]
-  (assoc player-data :x (- x (.-left bcr)) :y (- y (.-top bcr))))
+  ;; Approximat offsets for clicking in the middle of a name
+  (assoc player-data :x (- x 20 (.-left bcr)) :y (+ 8 (- y (.-top bcr)))))
 
 (defn move-name! [svg-root game-state name]
   (let [player-data (get-in game-state [:player-data name])]
@@ -189,7 +202,6 @@
 
 (def board-dimensions {:width 900
                        :height 640})
-
 
 (defn game-board []
   [:div
@@ -255,6 +267,10 @@
 
        [:div
         [:button
+         {:id "btn-help"
+          :on-click #(toggle-help!)}
+         "?"]
+        [:button
          {:id "btn-draw-card"
           :on-click #(draw-card!)}
          "Draw Card"]
@@ -267,6 +283,10 @@
           :class "red-button"
           :on-click #(reset-game!)}
          "Give Up!"]]
+       [:div
+        {:id "help-area"
+         :class (showing-help)}
+        (help/help-text)]
        [:div
         (str (current-player @app-state) ": Roll, then Draw.")]
        (let [current-card (peek (:discard-pile @app-state))]

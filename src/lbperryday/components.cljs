@@ -2,7 +2,8 @@
   (:require [goog.events :as events])
   (:import [goog.events EventType]))
 
-(def text-defaults {:font-size "small"
+(def text-defaults {:font-family "Bangers";
+                    :font-size "16px"
                     :class "move-area"})
 
 (defn drag-move-fn [on-drag]
