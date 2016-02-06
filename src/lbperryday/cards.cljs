@@ -1,5 +1,8 @@
 (ns lbperryday.cards)
 
+(def no-more-cards {:title "NO MORE CARDS"
+                    :body "You have drawn the last card.  Instead of shuffling, please consider creating new cards to play."})
+
 (def cards [{:title "Sam's Distraction"
              :body "Coldplay decides to play a surprise concert on Friday evening somewhere within a three hour drive of LBP.  If you're playing as Sam, lose a turn unless you're currently eating raw cookie dough, in which case, take another bit of cookie dough and roll again."}
             {:title "STOP LOOKING AT MY CARDS!"
