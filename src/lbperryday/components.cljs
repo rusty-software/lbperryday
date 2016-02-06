@@ -1,6 +1,5 @@
 (ns lbperryday.components
-  (:require [goog.events :as events]
-            [lbperryday.html-colors :as colors])
+  (:require [goog.events :as events])
   (:import [goog.events EventType]))
 
 (def text-defaults {:font-size "small"
@@ -36,7 +35,7 @@
            :y y})
    name])
 
-(defn board-space [x y]
+(defn board-space [x y color]
   ^{:key (str "space-" x "-" y)}
   [:rect
    {:x x
@@ -45,6 +44,6 @@
     :height 70
     :stroke "black"
     :stroke-width 0.5
-    :fill "LightGray" #_(colors/random-color)}])
+    :fill color}])
 
 
