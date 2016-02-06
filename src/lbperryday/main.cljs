@@ -3,7 +3,8 @@
             [clojure.string :as str]
             [lbperryday.cards :as cards]
             [lbperryday.components :as c]
-            [lbperryday.dice :as dice]))
+            [lbperryday.dice :as dice]
+            [lbperryday.html-colors :as colors]))
 
 (enable-console-print!)
 (defn not-implemented [function-name]
@@ -13,20 +14,76 @@
   (let [queue #queue []]
     (apply conj queue (shuffle cards/cards))))
 
+(def spiral-positions
+  [
+   ;; top row, left to right
+   {:x 10 :y 60}
+   {:x 135 :y 60}
+   {:x 260 :y 60}
+   {:x 385 :y 60}
+   {:x 510 :y 60}
+   {:x 635 :y 60}
+   {:x 760 :y 60}
+   ;; right column, top to bottom
+   {:x 760 :y 130}
+   {:x 760 :y 200}
+   {:x 760 :y 270}
+   {:x 760 :y 340}
+   {:x 760 :y 410}
+   {:x 760 :y 480}
+   ;; bottom row, right to left
+   {:x 760 :y 550}
+   {:x 635 :y 550}
+   {:x 510 :y 550}
+   {:x 385 :y 550}
+   {:x 260 :y 550}
+   {:x 135 :y 550}
+   ;; left column, bottom to top
+   {:x 10 :y 550}
+   {:x 10 :y 480}
+   {:x 10 :y 410}
+   {:x 10 :y 340}
+   {:x 10 :y 270}
+   ;; second row, right to left
+   {:x 10 :y 200}
+   {:x 135 :y 200}
+   {:x 260 :y 200}
+   {:x 385 :y 200}
+   ;;
+   {:x 510 :y 200}
+   {:x 510 :y 270}
+   {:x 510 :y 340}
+
+   {:x 510 :y 410}
+   {:x 385 :y 410}
+   {:x 260 :y 410}
+
+   {:x 260 :y 340}
+   ])
+
+(defn generate-spaces []
+  (vec
+    (let [n (count spiral-positions)
+          colors (vec (take n (cycle (shuffle colors/space-colors))))]
+      (for [i (range (count spiral-positions))]
+        (assoc (get spiral-positions i) :color (get colors i))))))
+
 (def initial-game-state {:current-dice (first dice/dice-specs)
-                          :roll-history '()
-                          :add-player-name nil
-                          :players []
-                          :player-cycle nil
-                          :player-data nil
-                          :draw-pile (shuffle-cards)
-                          :discard-pile nil
-                          :game-on? false})
+                         :roll-history '()
+                         :add-player-name nil
+                         :players []
+                         :player-cycle nil
+                         :player-data nil
+                         :draw-pile (shuffle-cards)
+                         :discard-pile nil
+                         :board-spaces (generate-spaces)
+                         :game-on? false})
 
 (defonce app-state (atom initial-game-state))
 
 (defn reset-game [_]
-  (assoc initial-game-state :draw-pile (shuffle-cards)))
+  (assoc initial-game-state :draw-pile (shuffle-cards)
+                            :board-spaces (generate-spaces)))
 
 (defn reset-game! []
   (swap! app-state reset-game))
@@ -91,11 +148,12 @@
   (swap! app-state next-player))
 
 (defn draw-card [game-state]
-  (let [drawn-card (peek (:draw-pile game-state))
-        updated-draw-pile (pop (:draw-pile game-state))
-        updated-discard-pile (conj (:discard-pile game-state) drawn-card)]
-    (assoc game-state :draw-pile updated-draw-pile
-                      :discard-pile updated-discard-pile)))
+  (if-let [drawn-card (peek (:draw-pile game-state))]
+    (let [updated-draw-pile (pop (:draw-pile game-state))
+          updated-discard-pile (conj (:discard-pile game-state) drawn-card)]
+      (assoc game-state :draw-pile updated-draw-pile
+                        :discard-pile updated-discard-pile))
+    (assoc game-state :discard-pile (conj (:discard-pile game-state) cards/no-more-cards))))
 
 (defn draw-card! []
   (swap! app-state draw-card))
@@ -132,32 +190,6 @@
 (def board-dimensions {:width 900
                        :height 640})
 
-(defn generate-spiral-positions []
-  (vec
-    (concat
-      (for [i (range 6)]
-        {:x (+ 10 (* i 125))
-         :y 60})
-      (for [i (range 7)]
-        {:x 760
-         :y (+ 60 (* i 70))})
-      (for [i (range 6 0 -1)]
-        {:x (+ 10 (* i 125))
-         :y 550})
-      (for [i (range 6 1 -1)]
-        {:x 10
-         :y (+ 130 (* i 70))})
-      (for [i (range 4)]
-        {:x (+ 10 (* i 125))
-         :y 200})
-      (for [i (range 1 4)]
-        {:x 510
-         :y (+ 130 (* i 70))})
-      (for [i (range 4 1 -1)]
-        {:x (+ 10 (* i 125))
-         :y 410})
-      [{:x 260
-        :y 340}])))
 
 (defn game-board []
   [:div
@@ -174,10 +206,9 @@
         :width (:width board-dimensions)
         :height (:height board-dimensions)
         :fill "DarkSeaGreen"}]
-    (let [positions (generate-spiral-positions)]
-      (for [i (range (count positions))]
-        (let [{:keys [x y]} (get positions i)]
-          (c/board-space x y))))
+    (for [space (:board-spaces @app-state)]
+      (let [{:keys [x y color]} space]
+        (c/board-space x y color)))
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
