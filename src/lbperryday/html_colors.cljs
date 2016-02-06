@@ -9,6 +9,15 @@
                   "DarkSlateBlue"
                   "Brown"])
 
+(def space-colors ["LightPink"
+                   "LightSalmon"
+                   "DarkOrange"
+                   "Moccasin"
+                   "Thistle"
+                   "PaleTurquoise"
+                   "SkyBlue"
+                   "Wheat"
+                   "MistyRose"])
 (def names ["AliceBlue"
               "AntiqueWhite"
               "Aqua"
