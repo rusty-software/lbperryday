@@ -137,78 +137,27 @@
     (concat
       (for [i (range 6)]
         {:x (+ 10 (* i 125))
-         :y 60
-         #_#_:drop-shadow "blurFilterBottom"})
+         :y 60})
       (for [i (range 7)]
         {:x 760
-         :y (+ 60 (* i 70))
-         #_#_:drop-shadow "blurFilterRight"})
+         :y (+ 60 (* i 70))})
       (for [i (range 6 0 -1)]
         {:x (+ 10 (* i 125))
-         :y 550
-         #_#_:drop-shadow "blurFilterBottom"})
+         :y 550})
       (for [i (range 6 1 -1)]
         {:x 10
-         :y (+ 130 (* i 70))
-         #_#_:drop-shadow "blurFilterSurround"})
+         :y (+ 130 (* i 70))})
       (for [i (range 4)]
         {:x (+ 10 (* i 125))
-         :y 200
-         #_#_:drop-shadow "blurFilterSurround"})
+         :y 200})
       (for [i (range 1 4)]
         {:x 510
-         :y (+ 130 (* i 70))
-         #_#_:drop-shadow "blurFilterSurround"})
+         :y (+ 130 (* i 70))})
       (for [i (range 4 1 -1)]
         {:x (+ 10 (* i 125))
-         :y 410
-         #_#_:drop-shadow "blurFilterSurround"})
+         :y 410})
       [{:x 260
-        :y 340
-        #_#_:drop-shadow "blurFilterSurround"}])))
-
-(def bottom-right-drop-shadow
-  (str "<filter id=\"blurFilterBottomRight\" x=\"-10\" y=\"-10\" width=\"125\" height=\"70\" >"
-                    "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"3\" result=\"offset2\" />"
-                    "  <feGaussianBlur in=\"offset2\" stdDeviation=\"3\" result=\"blur2\" />"
-                    "  <feMerge>"
-                    "    <feMergeNode in=\"blur2\" />"
-                    "    <feMergeNode in=\"SourceGraphic\" />"
-                    "  </feMerge>"
-                    "</filter>"))
-
-(def bottom-drop-shadow
-  (str "<filter id=\"blurFilterBottom\" x=\"0\" y=\"0\" width=\"122\" height=\"70\">"
-       "  <feOffset in=\"SourceAlpha\" dx=\"0\" dy=\"0\" result=\"offsetBottom\" />"
-       "  <feGaussianBlur in=\"offsetBottom\" stdDeviation=\"3\" result=\"blurBottom\" />"
-       "  <feMerge>"
-       "    <feMergeNode in=\"blurBottom\" />"
-       "    <feMergeNode in=\"SourceGraphic\" />"
-       "  </feMerge>"
-       "</filter>"))
-
-(def right-drop-shadow
-  (str "<filter id=\"blurFilterRight\" x=\"0\" y=\"0\" width=\"125\" height=\"70\">"
-       "  <feOffset in=\"SourceAlpha\" dx=\"3\" dy=\"0\" result=\"offsetRight\" />"
-       "  <feGaussianBlur in=\"offsetRight\" stdDeviation=\"3\" result=\"blurRight\" />"
-       "  <feMerge>"
-       "    <feMergeNode in=\"blurRight\" />"
-       "    <feMergeNode in=\"SourceGraphic\" />"
-       "  </feMerge>"
-       "</filter>"))
-
-(def surround-drop-shadow
-  (str "<filter id=\"blurFilterSurround\" x=\"-1\" y=\"-1\" width=\"126\" height=\"71\">"
-       "  <feOffset in=\"SourceAlpha\" dx=\"1\" dy=\"1\" result=\"offsetSurround\" />"
-       "  <feGaussianBlur in=\"offsetRight\" stdDeviation=\"3\" result=\"blurSurround\" />"
-       "  <feMerge>"
-       "    <feMergeNode in=\"blurSurround\" />"
-       "    <feMergeNode in=\"SourceGraphic\" />"
-       "  </feMerge>"
-       "</filter>"))
-
-(defn random-unused-meeple []
-  (first (shuffle c/meeples)))
+        :y 340}])))
 
 (defn game-board []
   [:div
@@ -218,15 +167,7 @@
      :width (:width board-dimensions)
      :height (:height board-dimensions)
      :style {:border "0.5px solid black"}}
-    [:defs
-     {:dangerouslySetInnerHTML
-      {:__html (str bottom-drop-shadow
-                    " "
-                    bottom-drop-shadow
-                    " "
-                    right-drop-shadow
-                    " "
-                    surround-drop-shadow)}}]
+
     [:rect
        {:x 0
         :y 0
@@ -235,14 +176,12 @@
         :fill "DarkSeaGreen"}]
     (let [positions (generate-spiral-positions)]
       (for [i (range (count positions))]
-        (let [{:keys [x y drop-shadow]} (get positions i)]
-          (c/board-space x y drop-shadow))))
+        (let [{:keys [x y]} (get positions i)]
+          (c/board-space x y))))
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
-               (let [icon (random-unused-meeple)]
-                 (c/meeple-image (:x data) (:y data) (random-unused-meeple) {:on-drag (move-name! root @app-state name)}))
-               #_(c/player-name {:on-drag (move-name! root @app-state name)} {:x (:x data) :y (:y data) :name name}))
+               (c/player-name {:on-drag (move-name! root @app-state name)} {:x (:x data) :y (:y data) :name name}))
              (:player-data @app-state))))]])
 
 (defn main-view []
@@ -298,7 +237,7 @@
           :on-click #(reset-game!)}
          "Give Up!"]]
        [:div
-        (str (current-player @app-state) ", it's your turn.")]
+        (str (current-player @app-state) ": Roll, then Draw.")]
        (let [current-card (peek (:discard-pile @app-state))]
          [:div
           {:id    "card-area"
