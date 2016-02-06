@@ -54,11 +54,21 @@
     :filter "url(#blurFilter2)"
     :fill #_"LightGray" (colors/random-color)}])
 
-#_(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
-  ^{:key (str "player-" name)}
-  [:circle
-   {:on-mouse-down #(dragging on-drag)
-    :cx x
-    :cy y
-    :r 5
-    :fill "blue"}])
+(def meeples [{:beer "img/beer.png"}
+              {:brisket "img/brisket.png"}
+              {:card "img/card.png"}
+              {:cheetos "img/cheetos.png"}
+              {:chief "img/chief.png"}
+              {:drum "img/drum.jpg"}
+              {:guac "img/guac.png"}
+              {:pontoon "img/pontoon.png"}
+              {:tent "img/tent.jpg"}])
+
+(defn meeple-image [x y meeple {:keys [on-drag]}]
+  ^{:key (str meeple "-" x "-" y)}
+  [:g
+   {:dangerouslySetInnerHTML
+    {:__html (str "<image xlink:href=\"" (first (vals meeple)) "\" "
+                  " x=\"" x "\" y=\"" y "\" "
+                  " width=\"" 50 "\" height=\"" 50 "\" "
+                  " onmousedown=\"" #(dragging on-drag) " />")}}])

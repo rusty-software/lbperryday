@@ -1,9 +1,9 @@
 (ns lbperryday.main
   (:require [reagent.core :as reagent :refer [atom]]
             [clojure.string :as str]
-            [lbperryday.dice :as dice]
             [lbperryday.cards :as cards]
-            [lbperryday.components :as c]))
+            [lbperryday.components :as c]
+            [lbperryday.dice :as dice]))
 
 (enable-console-print!)
 (defn not-implemented [function-name]
@@ -94,8 +94,6 @@
   (let [drawn-card (peek (:draw-pile game-state))
         updated-draw-pile (pop (:draw-pile game-state))
         updated-discard-pile (conj (:discard-pile game-state) drawn-card)]
-    (println "first draw-pile:" (first updated-draw-pile))
-    (println "first discard-pile:" (first updated-discard-pile))
     (assoc game-state :draw-pile updated-draw-pile
                       :discard-pile updated-discard-pile)))
 
@@ -209,7 +207,9 @@
        "  </feMerge>"
        "</filter>"))
 
-;; TODO: random fills should be set in atom, since they are recalculated with the mouse events
+(defn random-unused-meeple []
+  (first (shuffle c/meeples)))
+
 (defn game-board []
   [:div
    {:class "board-area"}
@@ -240,7 +240,9 @@
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
-               (c/player-name {:on-drag (move-name! root @app-state name)} {:x (:x data) :y (:y data) :name name}))
+               (let [icon (random-unused-meeple)]
+                 (c/meeple-image (:x data) (:y data) (random-unused-meeple) {:on-drag (move-name! root @app-state name)}))
+               #_(c/player-name {:on-drag (move-name! root @app-state name)} {:x (:x data) :y (:y data) :name name}))
              (:player-data @app-state))))]])
 
 (defn main-view []
