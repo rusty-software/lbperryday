@@ -6,6 +6,8 @@ A video game about how to live LBPERRYDAY
 
 This might very well be the best vidya game ever.  Play the game by visiting [rusty-software.github.io/lbperryday/](http://rusty-software.github.io/lbperryday/)
 
+Development backlog: [https://trello.com/b/Ls8fvaTf/lbperryday](https://trello.com/b/Ls8fvaTf/lbperryday)
+
 ## Development Details
 
 This is a figwheel/reagent project.  Pointers about how to get it going locally are below (and came from the README template).

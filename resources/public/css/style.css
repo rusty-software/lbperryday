@@ -119,6 +119,9 @@ h1 {
 .hit-area {
   cursor: pointer;
 }
+.move-area {
+  cursor: move;
+}
 /*
 
 
