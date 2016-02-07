@@ -94,7 +94,8 @@
 
 (defn reset-game [_]
   (assoc initial-game-state :draw-pile (shuffle-cards)
-                            :board-spaces (generate-spaces)))
+                            :board-spaces (generate-spaces)
+                            :final-space-img (rand-nth c/space-images)))
 
 (defn reset-game! []
   (swap! app-state reset-game))
