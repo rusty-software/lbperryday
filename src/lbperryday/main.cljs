@@ -81,8 +81,10 @@
                          :draw-pile (shuffle-cards)
                          :discard-pile nil
                          :board-spaces (generate-spaces)
+                         :final-space-img (rand-nth c/space-images)
                          :show-card? false
                          :show-victory? false
+                         :victor nil
                          :game-on? false})
 
 (defonce app-state (atom initial-game-state))
@@ -166,14 +168,15 @@
 (defn draw-card! []
   (swap! app-state draw-card))
 
-(defn end-game [game-state]
+(defn end-game [game-state name]
   (assoc game-state :players []
+                    :victor name
                     :show-victory? true))
 
-(defn end-game! []
-  (swap! app-state end-game))
+(defn end-game! [name]
+  (swap! app-state end-game name))
 
-(defn display-booty-trap! [x y]
+(defn display-booty-trap! [name x y]
   (not-implemented "display-booty-trap!"))
 
 (defn current-dice-transform [key]
@@ -225,14 +228,14 @@
 (defn has-booty-trap? [x y]
   (not-implemented "has-booty-trap?"))
 
-(defn check-for-special-events []
+(defn check-for-special-events [name]
   (fn [x y]
     (cond
       (lbp-nirvana? x y)
-      (end-game!)
+      (end-game! name)
 
       (has-booty-trap? x y)
-      (display-booty-trap! x y)
+      (display-booty-trap! name x y)
 
       :else
       nil)))
@@ -270,18 +273,20 @@
     (for [space (:board-spaces @app-state)]
       (let [{:keys [x y color]} space]
         (c/board-space x y color)))
+    (c/space-image (:final-space-img @app-state) (+ 27 (:low-x final-space-bounds)) (:low-y final-space-bounds) 70)
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
                (c/player-name {:on-drag (move-name! root @app-state name)
                                :on-start (fn [])
-                               :on-end (check-for-special-events)}
+                               :on-end (check-for-special-events name)}
                               {:x (:x data) :y (:y data) :name name}))
              (:player-data @app-state))))]])
 
 (defn main-view []
   [:div
    (game-board)
+
    [:div
     {:class "data-area"}
     [:center
@@ -290,6 +295,7 @@
       {:id "gather-players"
        :class (hidden-during-game)}
       [:div
+       {:id "player-inputs"}
        [:input
         {:id "txt-player-name"
          :style {:margin-right 2}
@@ -306,6 +312,7 @@
          :on-click #(start-game!)}
         "Start The Game!"]]
       [:div
+       {:id "player-list"}
        (for [player (:players @app-state)]
          (do
            ^{:key player}
@@ -316,7 +323,7 @@
       {:id "play-area"
        :class (shown-during-game)}
       [:div
-       {:id "buttons"}
+       {:id "play-buttons"}
        [:div
         [:button
          {:id "btn-help"
@@ -344,7 +351,7 @@
        [:div
         {:id "end-game-area"
          :class (showing-end-game)}
-        (help/end-game-text (current-player @app-state))]
+        (help/end-game-text (:victor @app-state))]
        [:div
         {:id "short-instruction-area"
          :class (str (shown-during-game) (hidden-during-end-game))}
@@ -379,8 +386,7 @@
           (do
             ^{:key (str roll (rand-int 10000000))}
             [:div
-             roll]))]
-       ]]]]])
+             roll]))]]]]]])
 
 (defn ^:export main []
   (when-let [app (. js/document (getElementById "app"))]

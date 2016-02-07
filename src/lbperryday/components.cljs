@@ -2,6 +2,16 @@
   (:require [goog.events :as events])
   (:import [goog.events EventType]))
 
+(def space-images ["img/beer.png"
+                   "img/brisket.png"
+                   "img/card.png"
+                   "img/cheetos.png"
+                   "img/chief.png"
+                   "img/drum.jpg"
+                   "img/guac.png"
+                   "img/pontoon.png"
+                   "img/tent.jpg"])
+
 (def text-defaults {:font-family "Bangers";
                     :font-size "16px"
                     :class "move-area"})
@@ -47,4 +57,6 @@
     :stroke-width 0.5
     :fill color}])
 
-
+(defn space-image [img x y size]
+  [:g
+   {:dangerouslySetInnerHTML {:__html (str "<image xlink:href=\"" img "\" x=" x " y=" y " width=\"" size "\" height=\"" size "\" />")}}])
