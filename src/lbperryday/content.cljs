@@ -1,4 +1,4 @@
-(ns lbperryday.help)
+(ns lbperryday.content)
 
 (defn help-text []
   [:div
