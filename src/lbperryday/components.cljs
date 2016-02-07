@@ -14,7 +14,7 @@
   (fn [evt]
     (events/unlisten js/window EventType.MOUSEMOVE drag-move)
     (events/unlisten js/window EventType.MOUSEUP @drag-end)
-    (on-end)))
+    (on-end (.-clientX evt) (.-clientY evt))))
 
 (defn dragging
   ([on-drag] (dragging on-drag (fn []) (fn [])))
@@ -27,11 +27,11 @@
      (events/listen js/window EventType.MOUSEMOVE drag-move)
      (events/listen js/window EventType.MOUSEUP drag-end))))
 
-(defn player-name [{:keys [on-drag]} {:keys [x y name]}]
+(defn player-name [{:keys [on-drag on-start on-end]} {:keys [x y name]}]
   ^{:key (str "player-" name)}
   [:text
    (merge text-defaults
-          {:on-mouse-down #(dragging on-drag)
+          {:on-mouse-down #(dragging on-drag on-start on-end)
            :x x
            :y y})
    name])

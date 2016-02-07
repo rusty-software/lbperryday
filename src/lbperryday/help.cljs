@@ -9,3 +9,7 @@
     [:li "Click and drag your meeple to the appropriate space on the board."]
     [:li "Draw a card."]
     [:li "Do what the card says."]]])
+
+(defn end-game-text [name]
+  [:div
+   (str "Congratulations, " name "!  You've achieved LBP Nirvana!  Rub it in the faces of your less fortunate compatriots, and perhaps grab them another beverage.")])

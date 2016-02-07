@@ -16,7 +16,7 @@
             {:title "Rocket Ship Tito"
              :body "Tony has signed up for Friday morning golf.  Unfortunately for him, Damon(?) forced him to consume ridiculous amounts of various and sundry boozes, and he is forced to sleep like the dead.  If you're playing as Tony, lose a turn, unless both Chase and Rusty can either guilt you into coming, or Damon has been searching for the Man Down, in which case take a drink and roll again."}
             {:title "Return To Your Roots"
-             :body "Todd finally convinces the group to return to Possum Kingdom for some real camping.  On the first evening, Todd stubs his toe, splitting it open to a degree that it requires sutures.  If neither Sam nor Po are playing, lose two turns due to infection.  If only Po is playing, lose a turn unless you agree to a vasectomy on the spot.  If Sam is playing, roll again, unless he's gone to see Coldplay this game."}
+             :body "Todd finally convinces the group to return to Possum Kingdom for some real camping.  On the first evening, Todd stubs his toe, splitting it open to a degree that it requires sutures.  If you are playing as Todd and neither Sam nor Po are playing, lose two turns due to infection.  If only Po is playing, lose a turn unless you agree to a vasectomy on the spot.  If Sam is playing, roll again, unless he's gone to see Coldplay this game."}
             {:title "Arts And Crafts"
              :body "Everyone that has legitimately participated in Arts and Crafts activities this year moves forward one space (simple majority judges participation level)."}
             {:title "Man Down!"
@@ -24,7 +24,7 @@
             {:title "A New(d) Business Venture"
              :body "Bill and Keith begin talking about what they've been up to this year, and suddenly realize that they're both silent partners in a teat dipping professional services consultancy.  They celebrate their new partnership by playing Civ 5 for the rest of LBP.  Lose a turn if you're playing as either Bill or Keith, unless you can prove you aren't in any business venture together, in which case take a drink and roll again."}
             {:title "Neverending Guac"
-             :body "he ingredients are purchased, the house is relatively quiet.  All that's left to do is make the guac!  If you're playing as Garner, lose a turn to make the guac, unless Garner has actually finished the guac by now, in which case eat a chip (preferably with guac), take a drink, and roll again."}
+             :body "The ingredients are purchased, the house is relatively quiet.  All that's left to do is make the guac!  If you're playing as Garner, lose a turn to make the guac, unless Garner has actually finished the guac by now, in which case eat a chip (preferably with guac), take a drink, and roll again."}
             {:title "BitTorrent Blight"
              :body "Upon connecting your rig to the massive TV, the doorbell rings.  Two men in suits and sunglasses walk in, demanding to see the proof of purchase for all content on your hard drive.  If you are playing as Tai, lose a turn, unless you can convince someone to take the fall for you (or Keith still has your hard drive from last year), in which case take a drink and roll again."}
             {:title "Golfing Through Fire"
