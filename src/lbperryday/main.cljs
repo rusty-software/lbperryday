@@ -4,7 +4,7 @@
             [lbperryday.cards :as cards]
             [lbperryday.components :as c]
             [lbperryday.dice :as dice]
-            [lbperryday.help :as help]
+            [lbperryday.content :as content]
             [lbperryday.html-colors :as colors]))
 
 (enable-console-print!)
@@ -62,8 +62,7 @@
    {:x 260 :y 340}
    ])
 
-(def final-space-bounds {:low-x 260 :high-x 385
-                         :low-y 340 :high-y 410})
+
 
 (defn generate-spaces []
   (vec
@@ -81,6 +80,10 @@
                          :draw-pile (shuffle-cards)
                          :discard-pile nil
                          :board-spaces (generate-spaces)
+                         :booty-traps [{:low-x 260 :high-x 385
+                                        :low-y 410 :high-y 480
+                                        :audio-key :scream
+                                        :trap-card (first cards/trap-cards)}]
                          :final-space-img (rand-nth c/space-images)
                          :show-card? false
                          :show-victory? false
@@ -174,9 +177,29 @@
                     :show-victory? true))
 
 (defn end-game! [name]
+  (.play (.getElementById js/document (get-in c/audio-snippets [:chief :name])))
   (swap! app-state end-game name))
 
+(comment
+  game-state {...
+              :booty-traps [{:low-x 0 :high-x 0
+                             :low-y 0 :high-y 0
+                             :audio-key :scream
+                             :trap-card {:title "" :body ""}      ;random trap card
+                             }]
+              ...})
+
+(defn trap-at [x y]
+  (let [traps (:booty-traps @app-state)]
+    (first (filter (fn [{:keys [low-x high-x low-y high-y]}]
+                     (and (< low-x x high-x)
+                          (< low-y y high-y)))
+                   traps))))
+
 (defn display-booty-trap! [name x y]
+  (let [trap (trap-at x y)]
+    (.play (.getElementById js/document (get-in c/audio-snippets [(:audio-key trap) :name])))
+    (println "TODO: remove trap from state"))
   (not-implemented "display-booty-trap!"))
 
 (defn current-dice-transform [key]
@@ -221,12 +244,15 @@
       reagent/dom-node
       .getBoundingClientRect))
 
+(def final-space-bounds {:low-x 260 :high-x 385
+                         :low-y 340 :high-y 410})
+
 (defn lbp-nirvana? [x y]
   (and (< (:low-x final-space-bounds) x (:high-x final-space-bounds))
        (< (:low-y final-space-bounds) y (:high-y final-space-bounds))))
 
 (defn has-booty-trap? [x y]
-  (not-implemented "has-booty-trap?"))
+  (trap-at x y))
 
 (defn check-for-special-events [name]
   (fn [x y]
@@ -283,10 +309,17 @@
                               {:x (:x data) :y (:y data) :name name}))
              (:player-data @app-state))))]])
 
+(defn embed-audio [{:keys [name source type]}]
+  (c/audio-snippet name source type))
+
+(defn embedded-snippets []
+  (for [audio-key (keys c/audio-snippets)]
+    (embed-audio (audio-key c/audio-snippets))))
+
 (defn main-view []
   [:div
    (game-board)
-
+   (embedded-snippets)
    [:div
     {:class "data-area"}
     [:center
@@ -347,11 +380,11 @@
        [:div
         {:id "help-area"
          :class (showing-help)}
-        (help/help-text)]
+        (content/help-text)]
        [:div
         {:id "end-game-area"
          :class (showing-end-game)}
-        (help/end-game-text (:victor @app-state))]
+        (content/end-game-text (:victor @app-state))]
        [:div
         {:id "short-instruction-area"
          :class (str (shown-during-game) (hidden-during-end-game))}

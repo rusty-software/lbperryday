@@ -12,6 +12,9 @@
                    "img/pontoon.png"
                    "img/tent.jpg"])
 
+(def audio-snippets {:scream {:name "audio-scream" :source "http://www.noiseaddicts.com/samples_1w72b820/3733.mp3" :type "audio/mpeg"}
+                     :chief {:name "audio-chief" :source "http://www.noiseaddicts.com/samples_1w72b820/4353.mp3" :type "audio/mpeg"}})
+
 (def text-defaults {:font-family "Bangers";
                     :font-size "16px"
                     :class "move-area"})
@@ -60,3 +63,10 @@
 (defn space-image [img x y size]
   [:g
    {:dangerouslySetInnerHTML {:__html (str "<image xlink:href=\"" img "\" x=" x " y=" y " width=\"" size "\" height=\"" size "\" />")}}])
+
+(defn audio-snippet [name source type]
+  ^{:key name}
+  [:audio {:id name
+           :controls false}
+   [:source {:src source
+             :type type}]])
