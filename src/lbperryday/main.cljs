@@ -62,6 +62,9 @@
    {:x 260 :y 340}
    ])
 
+(def final-space-bounds {:low-x 260 :high-x 385
+                         :low-y 340 :high-y 410})
+
 (defn generate-spaces []
   (vec
     (let [n (count spiral-positions)
@@ -78,6 +81,8 @@
                          :draw-pile (shuffle-cards)
                          :discard-pile nil
                          :board-spaces (generate-spaces)
+                         :show-card? false
+                         :show-victory? false
                          :game-on? false})
 
 (defonce app-state (atom initial-game-state))
@@ -143,7 +148,8 @@
 (defn next-player [game-state]
   (let [current-player (peek (:player-cycle game-state))
         updated-queue (pop (:player-cycle game-state))]
-    (assoc game-state :player-cycle (conj updated-queue current-player))))
+    (assoc game-state :player-cycle (conj updated-queue current-player)
+                      :show-card? false)))
 
 (defn next-player! []
   (swap! app-state next-player))
@@ -153,29 +159,53 @@
     (let [updated-draw-pile (pop (:draw-pile game-state))
           updated-discard-pile (conj (:discard-pile game-state) drawn-card)]
       (assoc game-state :draw-pile updated-draw-pile
-                        :discard-pile updated-discard-pile))
+                        :discard-pile updated-discard-pile
+                        :show-card? true))
     (assoc game-state :discard-pile (conj (:discard-pile game-state) cards/no-more-cards))))
 
 (defn draw-card! []
   (swap! app-state draw-card))
 
+(defn end-game [game-state]
+  (assoc game-state :players []
+                    :show-victory? true))
+
+(defn end-game! []
+  (swap! app-state end-game))
+
+(defn display-booty-trap! [x y]
+  (not-implemented "display-booty-trap!"))
+
 (defn current-dice-transform [key]
   (get-in @app-state [:current-dice :transform key]))
 
-(defn hidden-during-game []
-  (if (:game-on? @app-state)
+(defn maybe-hidden [hide-switch]
+  (if (hide-switch @app-state)
     " hidden"
     ""))
 
-(defn shown-during-game []
-  (if (:game-on? @app-state)
+(defn hidden-during-game []
+  (maybe-hidden :game-on?))
+
+(defn hidden-during-end-game []
+  (maybe-hidden :show-victory?))
+
+(defn maybe-shown [show-switch]
+  (if (show-switch @app-state)
     ""
     " hidden"))
 
+(defn shown-during-game []
+  (maybe-shown :game-on?))
+
 (defn showing-help []
-  (if (:show-help? @app-state)
-    ""
-    " hidden"))
+  (maybe-shown :show-help?))
+
+(defn showing-end-game []
+  (maybe-shown :show-victory?))
+
+(defn showing-card []
+  (maybe-shown :show-card?))
 
 (defn toggle-help [game-state]
   (assoc game-state :show-help? (not (:show-help? game-state))))
@@ -187,6 +217,25 @@
   (-> svg-root
       reagent/dom-node
       .getBoundingClientRect))
+
+(defn lbp-nirvana? [x y]
+  (and (< (:low-x final-space-bounds) x (:high-x final-space-bounds))
+       (< (:low-y final-space-bounds) y (:high-y final-space-bounds))))
+
+(defn has-booty-trap? [x y]
+  (not-implemented "has-booty-trap?"))
+
+(defn check-for-special-events []
+  (fn [x y]
+    (cond
+      (lbp-nirvana? x y)
+      (end-game!)
+
+      (has-booty-trap? x y)
+      (display-booty-trap! x y)
+
+      :else
+      nil)))
 
 (defn move-name [player-data bcr x y]
   ;; Approximat offsets for clicking in the middle of a name
@@ -224,7 +273,10 @@
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
-               (c/player-name {:on-drag (move-name! root @app-state name)} {:x (:x data) :y (:y data) :name name}))
+               (c/player-name {:on-drag (move-name! root @app-state name)
+                               :on-start (fn [])
+                               :on-end (check-for-special-events)}
+                              {:x (:x data) :y (:y data) :name name}))
              (:player-data @app-state))))]])
 
 (defn main-view []
@@ -259,12 +311,12 @@
            ^{:key player}
            [:div
             player]))]]
+
      [:div
       {:id "play-area"
        :class (shown-during-game)}
       [:div
        {:id "buttons"}
-
        [:div
         [:button
          {:id "btn-help"
@@ -282,22 +334,31 @@
          {:id "btn-end-game"
           :class "red-button"
           :on-click #(reset-game!)}
-         "Give Up!"]]
+         (if (:show-victory? @app-state)
+           "End Game"
+           "Give Up!")]]
        [:div
         {:id "help-area"
          :class (showing-help)}
         (help/help-text)]
        [:div
+        {:id "end-game-area"
+         :class (showing-end-game)}
+        (help/end-game-text (current-player @app-state))]
+       [:div
+        {:id "short-instruction-area"
+         :class (str (shown-during-game) (hidden-during-end-game))}
         (str (current-player @app-state) ": Roll, then Draw.")]
        (let [current-card (peek (:discard-pile @app-state))]
          [:div
-          {:id    "card-area"
-           :class "card-area"}
+          {:id "card-area"
+           :class (str "card-area" (showing-card) (hidden-during-end-game))}
           [:h3
            (:title current-card)]
           (:body current-card)])]
 
       [:div
+       {:class (hidden-during-end-game)}
        [:div
         {:id "dice-roll-area"
          :on-click #(roll-dice!)}
