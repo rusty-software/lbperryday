@@ -3,6 +3,9 @@
 (def no-more-cards {:title "NO MORE CARDS"
                     :body "You have drawn the last card.  Instead of shuffling, please consider creating new cards to play."})
 
+(def trap-cards [{:title "Some Random Trap"
+                  :body "Some Random bad thing happens to you (in addition to the audio you have to hear)."}])
+
 (def cards [{:title "Sam's Distraction"
              :body "Coldplay decides to play a surprise concert on Friday evening somewhere within a three hour drive of LBP.  If you're playing as Sam, lose a turn unless you're currently eating raw cookie dough, in which case, take another bit of cookie dough and roll again."}
             {:title "STOP LOOKING AT MY CARDS!"
@@ -67,5 +70,7 @@
              :body "The poker gods are indeed with you this year, as you continue to not only get good cards, but manage to play them correctly for once in your LBP card-playing career.  Roll again unless you are a former or current LBP Chieftain, in which case take another drink and tell us about your worst bad beat ever (or the worst bad beat in your memory of LBP)."}
             {:title "Chose Your Own Adventure"
              :body "Roll a dice.  If the number's parity matches the current LBP instance parity (e.g., you roll a 3 (which is odd), and it's LBP 17 (also odd)), roll again.  If not, move back a space.  The negative outcome can be countered by telling a tale from LBPs past.  If the tale is entertaining enough (as judged by simple player majority), move forward a space instead of rolling again."}
+            {:title "Sweat Shop"
+             :body "You might not be surprised to find that Phil has brought work with him to LBP.  What will surprise you, however, is that he's been listening to Pastor Todd's \"Power of Persuasion\" sermon series, and has used the skills learned there to enlist assistance.  Lose a turn (and take a drink) helping Phil with TPS reports if you've brought a computer to LBP this year.  If you're playing as Phil, roll again, since Todd's series also has a section on \"delegation.\""}
             ])
 
