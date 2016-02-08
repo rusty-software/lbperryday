@@ -197,11 +197,15 @@
                           (< low-y y high-y)))
                    traps))))
 
+(defn spring-trap [game-state trap]
+  (assoc game-state :discard-pile (conj (:discard-pile game-state) (:trap-card trap))
+                    :show-card? true
+                    :booty-traps (remove #{trap} (:booty-traps game-state))))
+
 (defn display-booty-trap! [name x y]
   (let [trap (trap-at x y)]
     (.play (.getElementById js/document (get-in c/audio-snippets [(:audio-key trap) :name])))
-    (println "TODO: remove trap from state"))
-  (not-implemented "display-booty-trap!"))
+    (swap! app-state spring-trap trap)))
 
 (defn current-dice-transform [key]
   (get-in @app-state [:current-dice :transform key]))
