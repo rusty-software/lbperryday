@@ -17,6 +17,7 @@
 
 (def spiral-positions
   [
+   ;; TODO: fill in low-x, high-x, low-y, high-y
    ;; top row, left to right
    {:x 10 :y 60}
    {:x 135 :y 60}
@@ -62,40 +63,53 @@
    {:x 260 :y 340}
    ])
 
-
-
 (defn generate-spaces []
   (vec
     (let [n (count spiral-positions)
           colors (vec (take n (cycle (shuffle colors/space-colors))))]
       (for [i (range (count spiral-positions))]
-        (assoc (get spiral-positions i) :color (get colors i))))))
+        (let [space (get spiral-positions i)]
+          (assoc space :color (get colors i)
+                       :low-x (:x space)
+                       :high-x (+ 125 (:x space))
+                       :low-y (:y space)
+                       :high-y (+ 70 (:y space))))))))
 
-(def initial-game-state {:current-dice (first dice/dice-specs)
-                         :roll-history '()
-                         :add-player-name nil
-                         :players []
-                         :player-cycle nil
-                         :player-data nil
-                         :draw-pile (shuffle-cards)
-                         :discard-pile nil
-                         :board-spaces (generate-spaces)
-                         :booty-traps [{:low-x 260 :high-x 385
-                                        :low-y 410 :high-y 480
-                                        :audio-key :scream
-                                        :trap-card (first cards/trap-cards)}]
-                         :final-space-img (rand-nth c/space-images)
-                         :show-card? false
-                         :show-victory? false
-                         :victor nil
-                         :game-on? false})
+(defn generate-booty-traps [spaces]
+  (vec
+    (let [traps (vec (take (count spaces) (shuffle cards/trap-cards)))]
+      (for [i (range (count spaces))]
+        (let [space (get spaces i)
+              trap (get traps i)]
+          {:low-x (:low-x space)
+           :high-x (:high-x space)
+           :low-y (:low-y space)
+           :high-y (:high-y space)
+           :trap-card trap})))))
 
-(defonce app-state (atom initial-game-state))
+(defn initialize-game-state []
+  (let [spaces (generate-spaces)
+        traps (generate-booty-traps (vec (take (min 6 (count cards/trap-cards)) (shuffle (butlast spaces)))))]
+    {:current-dice (first dice/dice-specs)
+     :roll-history '()
+     :add-player-name nil
+     :players []
+     :player-cycle nil
+     :player-data nil
+     :draw-pile (shuffle-cards)
+     :discard-pile nil
+     :board-spaces spaces
+     :booty-traps traps
+     :final-space-img (rand-nth c/space-images)
+     :show-card? false
+     :show-victory? false
+     :victor nil
+     :game-on? false}))
+
+(defonce app-state (atom (initialize-game-state)))
 
 (defn reset-game [_]
-  (assoc initial-game-state :draw-pile (shuffle-cards)
-                            :board-spaces (generate-spaces)
-                            :final-space-img (rand-nth c/space-images)))
+  (initialize-game-state))
 
 (defn reset-game! []
   (swap! app-state reset-game))
@@ -181,15 +195,6 @@
   (.play (.getElementById js/document (get-in c/audio-snippets [:chief :name])))
   (swap! app-state end-game name))
 
-(comment
-  game-state {...
-              :booty-traps [{:low-x 0 :high-x 0
-                             :low-y 0 :high-y 0
-                             :audio-key :scream
-                             :trap-card {:title "" :body ""}      ;random trap card
-                             }]
-              ...})
-
 (defn trap-at [x y]
   (let [traps (:booty-traps @app-state)]
     (first (filter (fn [{:keys [low-x high-x low-y high-y]}]
@@ -197,15 +202,16 @@
                           (< low-y y high-y)))
                    traps))))
 
-(defn spring-trap [game-state trap]
-  (assoc game-state :discard-pile (conj (:discard-pile game-state) (:trap-card trap))
+(defn spring-trap [game-state {:keys [trap-card] :as trap}]
+  (assoc game-state :discard-pile (conj (:discard-pile game-state) {:title (:title trap-card) :body (:body trap-card)})
                     :show-card? true
                     :booty-traps (remove #{trap} (:booty-traps game-state))))
 
 (defn display-booty-trap! [name x y]
   (let [trap (trap-at x y)]
-    (.play (.getElementById js/document (get-in c/audio-snippets [(:audio-key trap) :name])))
-    (swap! app-state spring-trap trap)))
+    (.play (.getElementById js/document (get-in c/audio-snippets [(get-in trap [:trap-card :audio]) :name])))
+    (swap! app-state spring-trap trap)
+    (println "remaining traps:" (:booty-traps @app-state))))
 
 (defn current-dice-transform [key]
   (get-in @app-state [:current-dice :transform key]))

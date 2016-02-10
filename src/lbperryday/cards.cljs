@@ -3,8 +3,18 @@
 (def no-more-cards {:title "NO MORE CARDS"
                     :body "You have drawn the last card.  Instead of shuffling, please consider creating new cards to play."})
 
-(def trap-cards [{:title "Some Random Trap"
-                  :body "Some Random bad thing happens to you (in addition to the audio you have to hear)."}])
+(def trap-cards [{:audio :scream
+                  :title "Darkened Missteps"
+                  :body "You've joked about diving from the deck into the pool two stories below, but no one would have expected that you would accidentally step off of the ledge backward, tumbling down the rock cliff face, all because you thought there was a solid step there.  Lose a turn while Sam sutures your back wound and sprays it with antibiotic whiskey."}
+                 {:audio :snoring
+                  :title "Early To Bed..."
+                  :body "Too many Nutter Butters, beef, and beer (and honestly, it was mostly the beer) have combined to give you major sleepy head.  You have passed out early and must lose a turn!"}
+                 {:audio :rooster
+                  :title "...Early To Rise"
+                  :body "Thanks to your overindulgence in Nutter Butters, beef, and beer last night, you were first to fall asleep/pass out.  As a consequence, you were the first to awaken.  Feel free to move forward a space while everyone else sleeps it off."}
+                 {:audio :power-off
+                  :title "Power Outage"
+                  :body "Apparently the owner of the current pimpy LBP abode forgot to pay the electric bill.  Whoever is in first place (including ties) must move back a space while looking for flashlights and beer.  The last place players (including ties) use this opportunity to cheat ahead a space."}])
 
 (def cards [{:title "Sam's Distraction"
              :body "Coldplay decides to play a surprise concert on Friday evening somewhere within a three hour drive of LBP.  If you're playing as Sam, lose a turn unless you're currently eating raw cookie dough, in which case, take another bit of cookie dough and roll again."}
@@ -72,5 +82,8 @@
              :body "Roll a dice.  If the number's parity matches the current LBP instance parity (e.g., you roll a 3 (which is odd), and it's LBP 17 (also odd)), roll again.  If not, move back a space.  The negative outcome can be countered by telling a tale from LBPs past.  If the tale is entertaining enough (as judged by simple player majority), move forward a space instead of rolling again."}
             {:title "Sweat Shop"
              :body "You might not be surprised to find that Phil has brought work with him to LBP.  What will surprise you, however, is that he's been listening to Pastor Todd's \"Power of Persuasion\" sermon series, and has used the skills learned there to enlist assistance.  Lose a turn (and take a drink) helping Phil with TPS reports if you've brought a computer to LBP this year.  If you're playing as Phil, roll again, since Todd's series also has a section on \"delegation.\""}
+            {:title "Social Interaction"
+             :body "In the history of LBP, no honey has ever actually approached any of the attendees... until now.  Lose a turn trying to think of what to say to her without embarassing yourself too much, unless you're playing as one of the single attendees, in which case give us your smoothest lines, take a drink and roll again."}
+
             ])
 
