@@ -12,7 +12,7 @@
                  {:audio :rooster
                   :title "...Early To Rise"
                   :body "Thanks to your overindulgence in Nutter Butters, beef, and beer last night, you were first to fall asleep/pass out.  As a consequence, you were the first to awaken.  Feel free to move forward a space while everyone else sleeps it off."}
-                 {:audio :power-off
+                 {:audio :power-down
                   :title "Power Outage"
                   :body "Apparently the owner of the current pimpy LBP abode forgot to pay the electric bill.  Whoever is in first place (including ties) must move back a space while looking for flashlights and beer.  The last place players (including ties) use this opportunity to cheat ahead a space."}])
 
@@ -84,6 +84,9 @@
              :body "You might not be surprised to find that Phil has brought work with him to LBP.  What will surprise you, however, is that he's been listening to Pastor Todd's \"Power of Persuasion\" sermon series, and has used the skills learned there to enlist assistance.  Lose a turn (and take a drink) helping Phil with TPS reports if you've brought a computer to LBP this year.  If you're playing as Phil, roll again, since Todd's series also has a section on \"delegation.\""}
             {:title "Social Interaction"
              :body "In the history of LBP, no honey has ever actually approached any of the attendees... until now.  Lose a turn trying to think of what to say to her without embarassing yourself too much, unless you're playing as one of the single attendees, in which case give us your smoothest lines, take a drink and roll again."}
-
+            {:title "Hot House of Funk"
+             :body "LBP is being held on Lake Whitney for the first time.  Unfortunately, what no one could have guessed is that the air conditioner is unable to get the house any cooler than 80 degrees, even with people farting outside exclusively.  Lose a turn trying to figure out how best to glamp in such sweaty conditions, unless you're playing as Nick, who is too cool to sweat under any circumstances, in which case you must make a toast to everyone and then roll again."}
+            {:title "Do You Want To Know A Secret?"
+             :body "If you know the context of this question, explain it to the players and roll again; otherwise, lose a turn.  Correct answers are judged by simple majority of the remaining players."}
             ])
 

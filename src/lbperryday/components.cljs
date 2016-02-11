@@ -16,7 +16,7 @@
                      :chief {:name "audio-chief" :source "sounds/chief.mp3" :type "audio/mpeg"}
                      :rooster {:name "audio-rooster" :source "sounds/rooster.mp3" :type "audio/mpeg"}
                      :snoring {:name "audio-snoring" :source "sounds/snoring.mp3" :type "audio/mpeg"}
-                     :power-off {:name "audio-power-off" :source "sounds/power_off.mp3" :type "audio/mpeg"}})
+                     :power-down {:name "audio-power-down" :source "sounds/power_down.mp3" :type "audio/mpeg"}})
 
 (def text-defaults {:font-family "Bangers";
                     :font-size "16px"
