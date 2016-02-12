@@ -3,6 +3,9 @@
 (def no-more-cards {:title "NO MORE CARDS"
                     :body "You have drawn the last card.  Instead of shuffling, please consider creating new cards to play."})
 
+(def victory-card {:title "SWEET, SWEET VICTORY!"
+                   :body "Congratulations %s!  You've achieved LBP Nirvana!  Rub it in the faces of your less fortunate compatriots, and perhaps grab them another beverage."})
+
 (def trap-cards [{:audio :scream
                   :title "Darkened Missteps"
                   :body "You've joked about diving from the deck into the pool two stories below, but no one would have expected that you would accidentally step off of the ledge backward, tumbling down the rock cliff face, all because you thought there was a solid step there.  Lose a turn while Sam sutures your back wound and sprays it with antibiotic whiskey."}
@@ -12,9 +15,12 @@
                  {:audio :rooster
                   :title "...Early To Rise"
                   :body "Thanks to your overindulgence in Nutter Butters, beef, and beer last night, you were first to fall asleep/pass out.  As a consequence, you were the first to awaken.  Feel free to move forward a space while everyone else sleeps it off."}
-                 {:audio :power-off
+                 {:audio :power-down
                   :title "Power Outage"
-                  :body "Apparently the owner of the current pimpy LBP abode forgot to pay the electric bill.  Whoever is in first place (including ties) must move back a space while looking for flashlights and beer.  The last place players (including ties) use this opportunity to cheat ahead a space."}])
+                  :body "Apparently the owner of the current pimpy LBP abode forgot to pay the electric bill.  Whoever is in first place (including ties) must move back a space while looking for flashlights and beer.  The last place players (including ties) use this opportunity to cheat ahead a space."}
+                 {:audio :splash
+                  :title "Pool Of Dreams"
+                  :body "It's been a LONG time since you've relaxed, much less relaxed while drinking a beer and eating Nutter Butters aboard a series of strangely phallic pool floaties.  You doze off, and are only startled back to wakefulness when someone yells \"WHAT... are you doing?\"  Lose a turn explaining your mild sunburn and unexpected erection."}])
 
 (def cards [{:title "Sam's Distraction"
              :body "Coldplay decides to play a surprise concert on Friday evening somewhere within a three hour drive of LBP.  If you're playing as Sam, lose a turn unless you're currently eating raw cookie dough, in which case, take another bit of cookie dough and roll again."}
@@ -84,6 +90,9 @@
              :body "You might not be surprised to find that Phil has brought work with him to LBP.  What will surprise you, however, is that he's been listening to Pastor Todd's \"Power of Persuasion\" sermon series, and has used the skills learned there to enlist assistance.  Lose a turn (and take a drink) helping Phil with TPS reports if you've brought a computer to LBP this year.  If you're playing as Phil, roll again, since Todd's series also has a section on \"delegation.\""}
             {:title "Social Interaction"
              :body "In the history of LBP, no honey has ever actually approached any of the attendees... until now.  Lose a turn trying to think of what to say to her without embarassing yourself too much, unless you're playing as one of the single attendees, in which case give us your smoothest lines, take a drink and roll again."}
-
+            {:title "Hot House of Funk"
+             :body "LBP is being held on Lake Whitney for the first time.  Unfortunately, what no one could have guessed is that the air conditioner is unable to get the house any cooler than 80 degrees, even with people farting outside exclusively.  Lose a turn trying to figure out how best to glamp in such sweaty conditions, unless you're playing as Nick, who is too cool to sweat under any circumstances, in which case you must make a toast to everyone and then roll again."}
+            {:title "Do You Want To Know A Secret?"
+             :body "If you know the context of this question, explain it to the players and roll again; otherwise, lose a turn.  Correct answers are judged by simple majority of the remaining players."}
             ])
 
