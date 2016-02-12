@@ -101,7 +101,6 @@
      :booty-traps traps
      :final-space-img (rand-nth c/space-images)
      :show-card? false
-     :show-victory? false
      :victor nil
      :game-on? false}))
 
@@ -188,7 +187,8 @@
 (defn end-game [game-state name]
   (assoc game-state :players []
                     :victor name
-                    :show-victory? true))
+                    :discard-pile (conj (:discard-pile game-state) cards/victory-card)
+                    :show-card? true))
 
 (defn end-game! [name]
   (.play (.getElementById js/document (get-in c/audio-snippets [:chief :name])))
@@ -222,9 +222,6 @@
 (defn hidden-during-game []
   (maybe-hidden :game-on?))
 
-(defn hidden-during-end-game []
-  (maybe-hidden :show-victory?))
-
 (defn maybe-shown [show-switch]
   (if (show-switch @app-state)
     ""
@@ -233,20 +230,8 @@
 (defn shown-during-game []
   (maybe-shown :game-on?))
 
-(defn showing-help []
-  (maybe-shown :show-help?))
-
-(defn showing-end-game []
-  (maybe-shown :show-victory?))
-
 (defn showing-card []
   (maybe-shown :show-card?))
-
-(defn toggle-help [game-state]
-  (assoc game-state :show-help? (not (:show-help? game-state))))
-
-(defn toggle-help! []
-  (swap! app-state toggle-help))
 
 (defn get-bcr [svg-root]
   (-> svg-root
@@ -383,23 +368,19 @@
            "End Game"
            "Give Up!")]]
        [:div
-        {:id "end-game-area"
-         :class (showing-end-game)}
-        (c/end-game-text (:victor @app-state))]
-       [:div
         {:id "short-instruction-area"
-         :class (str (shown-during-game) (hidden-during-end-game))}
+         :class (str (shown-during-game))}
         (str (current-player @app-state) ": Roll, then Draw.")]
        (let [current-card (peek (:discard-pile @app-state))]
          [:div
           {:id "card-area"
-           :class (str "card-area" (showing-card) (hidden-during-end-game))}
+           :class (str "card-area" (showing-card) )}
           [:h3
            (:title current-card)]
-          (:body current-card)])]
+          (when (:body current-card)
+            (str/replace (:body current-card) #"%s" (:victor @app-state)))])]
 
       [:div
-       {:class (hidden-during-end-game)}
        [:div
         {:id "dice-roll-area"
          :on-click #(roll-dice!)}

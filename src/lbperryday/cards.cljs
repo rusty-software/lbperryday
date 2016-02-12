@@ -3,6 +3,9 @@
 (def no-more-cards {:title "NO MORE CARDS"
                     :body "You have drawn the last card.  Instead of shuffling, please consider creating new cards to play."})
 
+(def victory-card {:title "SWEET, SWEET VICTORY!"
+                   :body "Congratulations %s!  You've achieved LBP Nirvana!  Rub it in the faces of your less fortunate compatriots, and perhaps grab them another beverage."})
+
 (def trap-cards [{:audio :scream
                   :title "Darkened Missteps"
                   :body "You've joked about diving from the deck into the pool two stories below, but no one would have expected that you would accidentally step off of the ledge backward, tumbling down the rock cliff face, all because you thought there was a solid step there.  Lose a turn while Sam sutures your back wound and sprays it with antibiotic whiskey."}
