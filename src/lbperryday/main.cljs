@@ -4,7 +4,6 @@
             [lbperryday.cards :as cards]
             [lbperryday.components :as c]
             [lbperryday.dice :as dice]
-            [lbperryday.content :as content]
             [lbperryday.html-colors :as colors]))
 
 (enable-console-print!)
@@ -210,8 +209,7 @@
 (defn display-booty-trap! [name x y]
   (let [trap (trap-at x y)]
     (.play (.getElementById js/document (get-in c/audio-snippets [(get-in trap [:trap-card :audio]) :name])))
-    (swap! app-state spring-trap trap)
-    (println "remaining traps:" (:booty-traps @app-state))))
+    (swap! app-state spring-trap trap)))
 
 (defn current-dice-transform [key]
   (get-in @app-state [:current-dice :transform key]))
@@ -370,10 +368,6 @@
        {:id "play-buttons"}
        [:div
         [:button
-         {:id "btn-help"
-          :on-click #(toggle-help!)}
-         "?"]
-        [:button
          {:id "btn-draw-card"
           :on-click #(draw-card!)}
          "Draw Card"]
@@ -389,13 +383,9 @@
            "End Game"
            "Give Up!")]]
        [:div
-        {:id "help-area"
-         :class (showing-help)}
-        (content/help-text)]
-       [:div
         {:id "end-game-area"
          :class (showing-end-game)}
-        (content/end-game-text (:victor @app-state))]
+        (c/end-game-text (:victor @app-state))]
        [:div
         {:id "short-instruction-area"
          :class (str (shown-during-game) (hidden-during-end-game))}
