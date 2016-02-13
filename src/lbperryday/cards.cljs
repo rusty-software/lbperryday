@@ -11,16 +11,16 @@
                   :body "You've joked about diving from the deck into the pool two stories below, but no one would have expected that you would accidentally step off of the ledge backward, tumbling down the rock cliff face, all because you thought there was a solid step there.  Lose a turn while Sam sutures your back wound and sprays it with antibiotic whiskey."}
                  {:audio :snoring
                   :title "Early To Bed..."
-                  :body "Too many Nutter Butters, beef, and beer (and honestly, it was mostly the beer) have combined to give you major sleepy head.  You have passed out early and must lose a turn!"}
+                  :body "Too many Nutter Butters, beef, and beer (and honestly, it was mostly the beer) have combined to give you major sleepy head.  You have passed out early and must lose a turn!  Everyone else MUST DRINK (and optionally snack) or move back a space."}
                  {:audio :rooster
                   :title "...Early To Rise"
-                  :body "Thanks to your overindulgence in Nutter Butters, beef, and beer last night, you were first to fall asleep/pass out.  As a consequence, you were the first to awaken.  Feel free to move forward a space while everyone else sleeps it off."}
+                  :body "Thanks to your overindulgence in Nutter Butters, beef, and beer last night, you were first to fall asleep/pass out.  As a consequence, you were the first to awaken.  Feel free to move forward a space while everyone else sleeps it off.  Everyone else MUST NOT DRINK until their next turn."}
                  {:audio :power-down
                   :title "Power Outage"
                   :body "Apparently the owner of the current pimpy LBP abode forgot to pay the electric bill.  Whoever is in first place (including ties) must move back a space while looking for flashlights and beer.  The last place players (including ties) use this opportunity to cheat ahead a space."}
                  {:audio :splash
                   :title "Pool Of Dreams"
-                  :body "It's been a LONG time since you've relaxed, much less relaxed while drinking a beer and eating Nutter Butters aboard a series of strangely phallic pool floaties.  You doze off, and are only startled back to wakefulness when someone yells \"WHAT... are you doing?\"  Lose a turn explaining your mild sunburn and unexpected erection."}])
+                  :body "It's been a LONG time since you've relaxed, much less relaxed while drinking a beer and eating Nutter Butters floating astride a series of strangely phallic pool floaties.  You doze off, and are only startled back to wakefulness when someone yells \"WHAT... are you doing?\"  Lose a turn explaining your mild sunburn and unexpected erection."}])
 
 (def cards [{:title "Sam's Distraction"
              :body "Coldplay decides to play a surprise concert on Friday evening somewhere within a three hour drive of LBP.  If you're playing as Sam, lose a turn unless you're currently eating raw cookie dough, in which case, take another bit of cookie dough and roll again."}
