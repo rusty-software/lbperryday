@@ -17,6 +17,7 @@
                      :rooster {:name "audio-rooster" :source "sounds/rooster.mp3" :type "audio/mpeg"}
                      :snoring {:name "audio-snoring" :source "sounds/snoring.mp3" :type "audio/mpeg"}
                      :splash {:name "audio-splash" :source "sounds/splash.mp3" :type "audio/mpeg"}
+                     :free-pass {:name "audio-free-pass" :source "sounds/free_pass.mp3" :type "audio/mpeg"}
                      :power-down {:name "audio-power-down" :source "sounds/power_down.mp3" :type "audio/mpeg"}})
 
 (def text-defaults {:font-family "Bangers";
