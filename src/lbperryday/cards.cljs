@@ -139,5 +139,11 @@
             {:num 38
              :title "Fresh Fish"
              :body "LBP can be a confusing time for young, impressionable guys.  If you have attended 25% or fewer LBPs, lose a turn figuring out what the hell is going on.  Otherwise, take a drink and roll again.  If you have attended EVERY LBP, finish your drink."}
+            {:num 39
+             :title "Talen Show!"
+             :body "It's finally happened: LBP Talent Show!  You are determined to win at all costs.  If you're playing as either Todd or Dan, lose a turn rehearsing the Punky Brewster theme song until your fingers bleed, unless you can play it for the rest of the group right now, in which take a drink and another turn."}
+            {:num 40
+             :title "Coconut Oil"
+             :body "Rocketship Tito has made a disciple of you.  Name 2 things Coconut Oil is good for, else lose a turn study the holy canon.  Name 3 things, and you can roll again.  If Tony is playing, he must judge your uses, else simple majority rules.  If you are playing as Tony, proselytize, drink, and roll again."}
             ])
 
