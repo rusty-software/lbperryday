@@ -154,5 +154,8 @@
             {:num 43
              :title "Did I Do That?"
              :body "Shenanigans abound at LBP.  This year is no different, except that the level of rambunctiousness is slightly elevated -- to the extent that furniture is \"damaged\".  Lose a turn trying to flip the cushions to hide your shame, unless you're playing as Nick, in which case you whip out your emergency upholstry repair kit, take a drink, and roll again."}
+            {:num 44
+             :title "Wishing Well"
+             :body "This year's LBP venue has a unique water feature.  Tossing coins into it seems to be the thing to do.  Roll the dice and make a wish.  On a 1, 2, or 3, nothing happens.  On a 4, move forward a single space.  On a 5, move forward to the next space with identical color.  On a 6, Damon mistakes your wistful expression for a need for a beverage and lobs a beer onto your unsuspecting noggin, knocking you out for a turn.  At least you got a beer out of it."}
             ])
 
