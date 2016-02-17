@@ -145,5 +145,14 @@
             {:num 40
              :title "Coconut Oil"
              :body "Rocketship Tito has made a disciple of you.  Name 2 things Coconut Oil is good for, else lose a turn study the holy canon.  Name 3 things, and you can roll again.  If Tony is playing, he must judge your uses, else simple majority rules.  If you are playing as Tony, proselytize, drink, and roll again."}
+            {:num 41
+             :title "Lost!"
+             :body "Last minute venue changes have left everyone wondering where, exactly, LBP is this year.  Lose a turn driving around the general area looking for signs or asking random people, unless you're Tony, in which case giggle maniacally, update a spreadsheet, take a drink, eat a snack of some kind, and roll again."}
+            {:num 42
+             :title "Life, The Universe, And Everything"
+             :body "This has nothing to do with LBP, but is an indulgence of the game author.  Correctly identify the answer to Life, the Universe, and Everything to move forward a space.  Roll again if you can tell us God's final message to creation."}
+            {:num 43
+             :title "Did I Do That?"
+             :body "Shenanigans abound at LBP.  This year is no different, except that the level of rambunctiousness is slightly elevated -- to the extent that furniture is \"damaged\".  Lose a turn trying to flip the cushions to hide your shame, unless you're playing as Nick, in which case you whip out your emergency upholstry repair kit, take a drink, and roll again."}
             ])
 
