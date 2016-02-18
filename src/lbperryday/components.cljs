@@ -21,8 +21,10 @@
                      :power-down {:name "audio-power-down" :source "sounds/power_down.mp3" :type "audio/mpeg"}})
 
 (def text-defaults {:font-family "Bangers";
-                    :font-size "16px"
-                    :class "move-area"})
+                    :font-size "16px"})
+
+(def drag-defaults
+  {:class "move-area"})
 
 (defn drag-move-fn [on-drag]
   (fn [evt]
@@ -48,11 +50,23 @@
 (defn player-name [{:keys [on-drag on-start on-end]} {:keys [x y name]}]
   ^{:key (str "player-" name)}
   [:text
-   (merge text-defaults
+   (merge drag-defaults
+          text-defaults
           {:on-mouse-down #(dragging on-drag on-start on-end)
            :x x
            :y y})
    name])
+
+(defn loser-dot [{:keys [on-drag on-start on-end]} {:keys [x y name]}]
+  ^{:key (str "loser-dot-" name)}
+  [:circle
+   (merge drag-defaults
+          {:cx x
+           :cy y
+           :r 5
+           :fill "red"
+           :on-mouse-down #(dragging on-drag on-start on-end)})]
+  )
 
 (defn board-space [x y color]
   ^{:key (str "space-" x "-" y)}

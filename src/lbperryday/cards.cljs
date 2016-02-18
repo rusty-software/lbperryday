@@ -78,7 +78,7 @@
              :body "While you thought you would beat the LBP traffic this year by arriving at noon on Thursday, it turns out everyone else spent Wednesday night in Chase's back yard and got there before you.  Lose a turn trying to figure out where you're going to sleep, unless you're playing as Garner, in which case demonstrate that you can sleep anywhere by pulling any two objects of similar height together and planking on them, and then roll again."}
             {:num 18
              :title "I'm (Not) On A Boat!"
-             :body "While out on the lake, you decide to get out of the water to pee for some reason.  While relieving yourself, the boats (because there are two) departing, both thinking that you're on the other one. Lose a turn hitchhiking back to the cabin unless you can spin an entertaining tale of how you beat the boats back (simple majority rules), in which case roll again."}
+             :body "While out on the lake, you decide to get out of the water to pee for some reason.  While relieving yourself, the boats (because there are two) depart, both thinking that you're on the other one. Lose a turn hitchhiking back to the cabin unless you can spin an entertaining tale of how you beat the boats back (simple majority rules), in which case roll again."}
             {:num 19
              :title "Cheetos And Strife"
              :body "You go looking for two LBP snack staples: cheetos and beer.  Unfortunately, someone has consumed the last of both without notifying the authorities, and you begin to exhibit withdrawal symptoms. Lose a turn making a store run unless you've actually made a store run this LBP, in which case you convince someone else to go and roll again."}
@@ -108,7 +108,7 @@
              :body "Lose a turn if any women's sporting event occurs during LBP this year.  Samples include Women's World Cup, Summer Olympics, MMA, Lingerie Football, etc."}
             {:num 28
              :title "The Souls Of LBP"
-             :body "Todd gives the most inspirational and compelling sermon ever uttered by mortal man.  It's so convincing that not only do all LBP attendees become Christian, Odin, Zeus, and Osiris show up and convert as well.  The Flying Spaghetti Monster remains unconvinced.  If you're playing as Todd, lose a turn while being congratulated by Jesus.  If Todd actually HAS preached a sermon or converted someone during this LBP, roll again."}
+             :body "Todd gives the most inspirational and compelling sermon ever uttered by mortal man.  It's so convincing that not only do all LBP attendees become Christian, but Odin, Zeus, and Osiris also show up and convert.  The Flying Spaghetti Monster remains unconvinced.  If you're playing as Todd, lose a turn while being congratulated by Jesus himself.  If Todd actually HAS preached a sermon or converted someone during this LBP, roll again."}
             {:num 29
              :title "The People's Champion"
              :body "Dr. Brewer, after mistakenly ingesting an entire bottle of Boone's Strawberry Hill thinking it was Gatorade, metamorphosizes into CB.  Screaming \"PROLES, UNITE!\", he charges the main stage where Sam is dancing for Phil.  If you're playing as Curtis, lose a turn being restrained by Bill.  If Curtis actually HAS punched someone this LBP, roll again and STOP LOOKING AT HIS CARDS!"}
@@ -135,7 +135,7 @@
              :body "If you know the context of this question, explain it to the players and roll again; otherwise, lose a turn.  Correct answers are judged by simple majority of the remaining players."}
             {:num 37
              :title "Firepit Fiasco"
-             :body "For some reason, the firepit, such as it is, is directly below a low-hanging limb -- so low-hanging that you're pretty sure it's on fire.  Lose a turn forming everyone into a bucket brigade, unless you're playing as CB, in which case flip the steaks, take a drink, and roll again."}
+             :body "For some reason, the firepit, such as it is, is directly below a low-hanging limb -- so low-hanging that you're pretty sure the limb just caught on fire.  Lose a turn forming everyone into a bucket brigade, unless you're playing as CB, in which case flip the steaks, take a drink, and roll again."}
             {:num 38
              :title "Fresh Fish"
              :body "LBP can be a confusing time for young, impressionable guys.  If you have attended 25% or fewer LBPs, lose a turn figuring out what the hell is going on.  Otherwise, take a drink and roll again.  If you have attended EVERY LBP, finish your drink."}

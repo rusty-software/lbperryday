@@ -95,6 +95,7 @@
      :players []
      :player-cycle nil
      :player-data nil
+     :dot-data nil
      :draw-pile (shuffle-cards)
      :discard-pile nil
      :board-spaces spaces
@@ -145,10 +146,21 @@
       player-data
       (recur (assoc player-data (first players) {:x x :y y}) (rest players) (+ x 50) y))))
 
+(defn initial-dot-data-map [players]
+  (loop [dot-data {}
+         dots players
+         x 650
+         y 20]
+    (if (empty? dots)
+      dot-data
+      (recur (assoc dot-data (first dots) {:x x :y y}) (rest dots) (+ x 50) y))))
+
 (defn initial-state [game-state]
-  (assoc game-state :game-on? true
-                    :player-cycle (player-queue (:players game-state))
-                    :player-data (initial-player-data-map (:players game-state))))
+  (let [new-game-state (assoc game-state :game-on? true
+                      :player-cycle (player-queue (:players game-state))
+                      :player-data (initial-player-data-map (:players game-state))
+                      :dot-data (initial-dot-data-map (:players game-state)))]
+    new-game-state))
 
 (defn start-game! []
   (swap! app-state initial-state))
@@ -272,6 +284,17 @@
             updated-game-state (assoc-in game-state [:player-data name] updated-player-data)]
         (reset! app-state updated-game-state)))))
 
+(defn move-dot [dot-data bcr x y]
+  (assoc dot-data :x (- x (.-left bcr)) :y (- y (.-top bcr))))
+
+(defn move-dot! [svg-root game-state name]
+  (let [dot-data (get-in game-state [:dot-data name])]
+    (fn [x y]
+      (let [bcr (get-bcr svg-root)
+            updated-dot-data (move-dot dot-data bcr x y)
+            updated-game-state (assoc-in game-state [:dot-data name] updated-dot-data)]
+        (reset! app-state updated-game-state)))))
+
 (def board-dimensions {:width 900
                        :height 640})
 
@@ -301,7 +324,15 @@
                                :on-start (fn [])
                                :on-end (check-for-special-events name)}
                               {:x (:x data) :y (:y data) :name name}))
-             (:player-data @app-state))))]])
+             (:player-data @app-state))))
+    (let [root (reagent/current-component)]
+      (doall
+        (map (fn [[name data]]
+               (c/loser-dot {:on-drag (move-dot! root @app-state name)
+                             :on-start (fn [])
+                             :on-end (fn [])}
+                            {:x (:x data) :y (:y data) :name name}))
+             (:dot-data @app-state))))]])
 
 (defn embed-audio [{:keys [name source type]}]
   (c/audio-snippet name source type))
