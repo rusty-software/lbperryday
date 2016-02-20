@@ -157,5 +157,8 @@
             {:num 44
              :title "Wishing Well"
              :body "This year's LBP venue has a unique water feature.  Tossing coins into it seems to be the thing to do.  Roll the dice and make a wish.  On a 1, 2, or 3, nothing happens.  On a 4, move forward a single space.  On a 5, move forward to the next space with identical color.  On a 6, Damon mistakes your wistful expression for a need for a beverage and lobs a beer onto your unsuspecting noggin, knocking you out for a turn.  At least you got a beer out of it."}
+            {:num 45
+             :title "WSOP Online"
+             :body "In preparation for LBP, you thought you'd spend a little time playing Hold 'Em online.  Your first experience in online card tournaments turned out to be your last, however, when you were not only beaten, but mocked by the pre-pubescent that knocked you out.  Lose a turn regaining your self-respect, unless you're playing as Tai -- who has been through that wringer before.  Take a drink and roll again if so."}
             ])
 
