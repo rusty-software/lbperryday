@@ -140,7 +140,7 @@
              :title "Fresh Fish"
              :body "LBP can be a confusing time for young, impressionable guys.  If you have attended 25% or fewer LBPs, lose a turn figuring out what the hell is going on.  Otherwise, take a drink and roll again.  If you have attended EVERY LBP, finish your drink."}
             {:num 39
-             :title "Talen Show!"
+             :title "Talent Show!"
              :body "It's finally happened: LBP Talent Show!  You are determined to win at all costs.  If you're playing as either Todd or Dan, lose a turn rehearsing the Punky Brewster theme song until your fingers bleed, unless you can play it for the rest of the group right now, in which take a drink and another turn."}
             {:num 40
              :title "Coconut Oil"
@@ -160,5 +160,11 @@
             {:num 45
              :title "WSOP Online"
              :body "In preparation for LBP, you thought you'd spend a little time playing Hold 'Em online.  Your first experience in online card tournaments turned out to be your last, however, when you were not only beaten, but mocked by the pre-pubescent that knocked you out.  Lose a turn regaining your self-respect, unless you're playing as Tai -- who has been through that wringer before.  Take a drink and roll again if so."}
+            {:num 46
+             :title "They See Me Trollin'"
+             :body "Chase sends out his missives with ever-increasing frequency as the LBP date approaches, and he needs to be put in his place.  Lose a turn if you're playing as Todd coming up with a rebuttal to every desirous point Chase makes, unless you can get Phil or Sam in on the action (right now), in which case bring them both a beverage then roll again."}
+            {:num 47
+             :title "Dodge It!"
+             :body "Summarize the context for the title of this card.  Demonstrate the nice moves associated with it.  Say the appropriate line while demonstrating.  Judgement (by simply majority) of the entertaining value of the actions determines whether or not you get to roll again."}
             ])
 
