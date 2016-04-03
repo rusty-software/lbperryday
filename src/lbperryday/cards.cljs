@@ -166,5 +166,8 @@
             {:num 47
              :title "Dodge It!"
              :body "Summarize the context for the title of this card.  Demonstrate the nice moves associated with it.  Say the appropriate line while demonstrating.  Judgement (by simply majority) of the entertaining value of the actions determines whether or not you get to roll again."}
+            {:num 48
+             :title "Witch's Brew"
+             :body "Instead of the Vitamix, Tony arrives at LBP with a large cauldron.  'You guys'll love this!' he exclaims as he proceeds to mix liquors from various unmarked bottles.  Tony dips you a flagon's worth, and you drink.  Roll the dice.  On a 1, 2, or 3, nothing happens.  On a 4, you curse the leader (including ties), moving them back a space.  On a 5, the leader moves back to the first space of identical color.  On a 6, you immediately pass out and lose a turn."}
             ])
 
