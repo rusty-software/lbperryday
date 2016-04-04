@@ -9,6 +9,7 @@
 (defn display-booty-trap! [name x y]
   (let [trap (model/trap-at x y)]
     (.play (.getElementById js/document (get-in components/audio-snippets [(get-in trap [:trap-card :audio]) :name])))
+    (model/spring-trap! trap)
     (swap! model/app-state model/spring-trap trap)))
 
 (defn current-dice-transform [key]
@@ -161,7 +162,7 @@
        [:div
         {:id "short-instruction-area"
          :class (str (shown-during-game))}
-        (str (model/current-player @model/app-state) ": Roll, then Draw.")]
+        (str (model/current-player) ": Roll, then Draw.")]
        (let [current-card (peek (:discard-pile @model/app-state))]
          [:div
           {:id "card-area"

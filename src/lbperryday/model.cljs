@@ -109,11 +109,11 @@
 (defn reset-game! []
   (swap! app-state reset-game))
 
-(defn current-player [game-state]
-  (first (:player-cycle game-state)))
+(defn current-player []
+  (first (:player-cycle @app-state)))
 
 (defn roll-history-row [roll]
-  (let [current-player (or (current-player @app-state) "you")]
+  (let [current-player (or (current-player) "you")]
     (str current-player " just rolled a " (inc roll))))
 
 (defn roll-dice [game-state]
@@ -123,11 +123,8 @@
 (defn roll-dice! []
   (swap! app-state roll-dice))
 
-(defn update-player-name [game-state name]
-  (assoc game-state :add-player-name name))
-
 (defn update-player-name! [name]
-  (swap! app-state update-player-name name))
+  (swap! app-state assoc :add-player-name name))
 
 (defn player-queue [players]
   (let [queue #queue []]
@@ -242,3 +239,4 @@
             updated-game-state (assoc-in game-state [:dot-data name] updated-dot-data)]
         (reset! app-state updated-game-state)))))
 
+(defn spring-trap! [trap])
