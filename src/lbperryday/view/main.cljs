@@ -33,7 +33,6 @@
 (defn showing-card []
   (maybe-shown :show-card?))
 
-
 (def final-space-bounds {:low-x 260 :high-x 385
                          :low-y 340 :high-y 410})
 
