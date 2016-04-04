@@ -1,4 +1,4 @@
-(ns lbperryday.components
+(ns lbperryday.view.components
   (:require [goog.events :as events])
   (:import [goog.events EventType]))
 
@@ -90,6 +90,3 @@
    [:source {:src source
              :type type}]])
 
-(defn end-game-text [name]
-  [:div
-   (str "Congratulations, " name "!  You've achieved LBP Nirvana!  Rub it in the faces of your less fortunate compatriots, and perhaps grab them another beverage.")])

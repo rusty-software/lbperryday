@@ -1,4 +1,4 @@
-(ns lbperryday.cards)
+(ns lbperryday.content.cards)
 
 (def no-more-cards {:title "NO MORE CARDS"
                     :body "You have drawn the last card.  Instead of shuffling, please consider creating new cards to play."})

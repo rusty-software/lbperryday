@@ -1,5 +1,5 @@
-(ns lbperryday.dice
-  (:require [lbperryday.html-colors :as colors]))
+(ns lbperryday.view.dice
+  (:require [lbperryday.content.html-colors :as colors]))
 
 (def dice-specs
   [{:color (get colors/dice-colors 0)

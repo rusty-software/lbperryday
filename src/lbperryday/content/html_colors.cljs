@@ -1,4 +1,4 @@
-(ns lbperryday.html-colors)
+(ns lbperryday.content.html-colors)
 
 (def game-board-color ["DarkSeaGreen"])
 
@@ -18,6 +18,7 @@
                    "SkyBlue"
                    "Wheat"
                    "MistyRose"])
+
 (def names ["AliceBlue"
               "AntiqueWhite"
               "Aqua"
