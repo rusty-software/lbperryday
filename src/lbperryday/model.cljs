@@ -211,7 +211,10 @@
                     :show-card? true
                     :booty-traps (remove #{trap} (:booty-traps game-state))))
 
-(defn move-name [player-data bcr x y]
+(defn spring-trap! [trap]
+  (swap! app-state spring-trap trap))
+
+(defn move-player-name [player-data bcr x y]
   ;; Approximat offsets for clicking in the middle of a name
   (assoc player-data :x (- x 20 (.-left bcr)) :y (+ 8 (- y (.-top bcr)))))
 
@@ -220,23 +223,21 @@
       reagent/dom-node
       .getBoundingClientRect))
 
-(defn move-name! [svg-root game-state name]
-  (let [player-data (get-in game-state [:player-data name])]
+(defn move-name! [svg-root name]
+  (let [player-data (get-in @app-state [:player-data name])]
     (fn [x y]
       (let [bcr (get-bcr svg-root)
-            updated-player-data (move-name player-data bcr x y)
-            updated-game-state (assoc-in game-state [:player-data name] updated-player-data)]
-        (reset! app-state updated-game-state)))))
+            updated-player-data (move-player-name player-data bcr x y)]
+        (swap! app-state assoc-in [:player-data name] updated-player-data)))))
 
 (defn move-dot [dot-data bcr x y]
   (assoc dot-data :x (- x (.-left bcr)) :y (- y (.-top bcr))))
 
-(defn move-dot! [svg-root game-state name]
-  (let [dot-data (get-in game-state [:dot-data name])]
+(defn move-dot! [svg-root name]
+  (let [dot-data (get-in @app-state [:dot-data name])]
     (fn [x y]
       (let [bcr (get-bcr svg-root)
-            updated-dot-data (move-dot dot-data bcr x y)
-            updated-game-state (assoc-in game-state [:dot-data name] updated-dot-data)]
-        (reset! app-state updated-game-state)))))
+            updated-dot-data (move-dot dot-data bcr x y)]
+        (swap! app-state assoc-in [:dot-data name] updated-dot-data)))))
 
-(defn spring-trap! [trap])
+

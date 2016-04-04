@@ -9,8 +9,7 @@
 (defn display-booty-trap! [name x y]
   (let [trap (model/trap-at x y)]
     (.play (.getElementById js/document (get-in components/audio-snippets [(get-in trap [:trap-card :audio]) :name])))
-    (model/spring-trap! trap)
-    (swap! model/app-state model/spring-trap trap)))
+    (model/spring-trap! trap)))
 
 (defn current-dice-transform [key]
   (get-in @model/app-state [:current-dice :transform key]))
@@ -69,11 +68,11 @@
      :style {:border "0.5px solid black"}}
 
     [:rect
-       {:x 0
-        :y 0
-        :width (:width board-dimensions)
-        :height (:height board-dimensions)
-        :fill "DarkSeaGreen"}]
+     {:x 0
+      :y 0
+      :width (:width board-dimensions)
+      :height (:height board-dimensions)
+      :fill "DarkSeaGreen"}]
     (for [space (:board-spaces @model/app-state)]
       (let [{:keys [x y color]} space]
         (components/board-space x y color)))
@@ -81,18 +80,18 @@
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
-               (components/player-name {:on-drag (model/move-name! root @model/app-state name)
-                               :on-start (fn [])
-                               :on-end (check-for-special-events name)}
-                              {:x (:x data) :y (:y data) :name name}))
+               (components/player-name {:on-drag (model/move-name! root name)
+                                        :on-start (fn [])
+                                        :on-end (check-for-special-events name)}
+                                       {:x (:x data) :y (:y data) :name name}))
              (:player-data @model/app-state))))
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
-               (components/loser-dot {:on-drag (model/move-dot! root @model/app-state name)
-                             :on-start (fn [])
-                             :on-end (fn [])}
-                            {:x (:x data) :y (:y data) :name name}))
+               (components/loser-dot {:on-drag (model/move-dot! root name)
+                                      :on-start (fn [])
+                                      :on-end (fn [])}
+                                     {:x (:x data) :y (:y data) :name name}))
              (:dot-data @model/app-state))))]])
 
 (defn embed-audio [{:keys [name source type]}]
