@@ -3,7 +3,8 @@
             [lbperryday.view.components :as components]
             [lbperryday.view.dice :as dice]
             [lbperryday.content.cards :as cards]
-            [lbperryday.content.html-colors :as colors]))
+            [lbperryday.content.html-colors :as colors]
+            [clojure.string :as str]))
 
 (defn shuffle-cards []
   (let [queue #queue []]
@@ -216,6 +217,11 @@
 (defn move-name [player-data bcr x y]
   ;; Approximat offsets for clicking in the middle of a name
   (assoc player-data :x (- x 20 (.-left bcr)) :y (+ 8 (- y (.-top bcr)))))
+
+(defn get-bcr [svg-root]
+  (-> svg-root
+      reagent/dom-node
+      .getBoundingClientRect))
 
 (defn move-name! [svg-root game-state name]
   (let [player-data (get-in game-state [:player-data name])]

@@ -33,10 +33,6 @@
 (defn showing-card []
   (maybe-shown :show-card?))
 
-(defn get-bcr [svg-root]
-  (-> svg-root
-      reagent/dom-node
-      .getBoundingClientRect))
 
 (def final-space-bounds {:low-x 260 :high-x 385
                          :low-y 340 :high-y 410})
@@ -78,14 +74,14 @@
         :width (:width board-dimensions)
         :height (:height board-dimensions)
         :fill "DarkSeaGreen"}]
-    (for [space (:board-spaces @app-state)]
+    (for [space (:board-spaces @model/app-state)]
       (let [{:keys [x y color]} space]
         (components/board-space x y color)))
-    (components/space-image (:final-space-img @app-state) (+ 27 (:low-x final-space-bounds)) (:low-y final-space-bounds) 70)
+    (components/space-image (:final-space-img @model/app-state) (+ 27 (:low-x final-space-bounds)) (:low-y final-space-bounds) 70)
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
-               (components/player-name {:on-drag (model/move-name! root @app-state name)
+               (components/player-name {:on-drag (model/move-name! root @model/app-state name)
                                :on-start (fn [])
                                :on-end (check-for-special-events name)}
                               {:x (:x data) :y (:y data) :name name}))
@@ -123,7 +119,7 @@
         {:id "txt-player-name"
          :style {:margin-right 2}
          :type "text"
-         :value (:add-player-name @app-state)
+         :value (:add-player-name @model/app-state)
          :on-change #(model/update-player-name! (-> % .-target .-value))}]
        [:button
         {:id "btn-add-player"
@@ -193,7 +189,7 @@
            (dice/dice-side side-spec))]]
        [:div
         {:id "dice-result"}
-        (for [roll (:roll-history @app-state)]
+        (for [roll (:roll-history @model/app-state)]
           (do
             ^{:key (str roll (rand-int 10000000))}
             [:div
