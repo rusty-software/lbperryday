@@ -1,4 +1,4 @@
-(ns lbperryday.cards)
+(ns lbperryday.content.cards)
 
 (def no-more-cards {:title "NO MORE CARDS"
                     :body "You have drawn the last card.  Instead of shuffling, please consider creating new cards to play."})
@@ -144,7 +144,7 @@
              :body "It's finally happened: LBP Talent Show!  You are determined to win at all costs.  If you're playing as either Todd or Dan, lose a turn rehearsing the Punky Brewster theme song until your fingers bleed, unless you can play it for the rest of the group right now, in which take a drink and another turn."}
             {:num 40
              :title "Coconut Oil"
-             :body "Rocketship Tito has made a disciple of you.  Name 2 things Coconut Oil is good for, else lose a turn study the holy canon.  Name 3 things, and you can roll again.  If Tony is playing, he must judge your uses, else simple majority rules.  If you are playing as Tony, proselytize, drink, and roll again."}
+             :body "Rocketship Tito has made a disciple of you.  Name 2 things Coconut Oil is good for, else lose a turn to study the holy canon.  Name 3 things, and you can roll again.  If Tony is playing, he must judge your uses, else simple majority rules.  If you are playing as Tony, proselytize, drink, and roll again."}
             {:num 41
              :title "Lost!"
              :body "Last minute venue changes have left everyone wondering where, exactly, LBP is this year.  Lose a turn driving around the general area looking for signs or asking random people, unless you're Tony, in which case giggle maniacally, update a spreadsheet, take a drink, eat a snack of some kind, and roll again."}
