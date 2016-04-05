@@ -9,15 +9,11 @@
                   "DarkSlateBlue"
                   "Brown"])
 
-(def space-colors ["LightPink"
-                   "LightSalmon"
-                   "DarkOrange"
-                   "Moccasin"
-                   "Thistle"
-                   "PaleTurquoise"
-                   "SkyBlue"
-                   "Wheat"
-                   "MistyRose"])
+(def space-colors ["gold"
+                   "tomato"
+                   "dodgerblue"
+                   "mediumorchid"
+                   "green"])
 
 (def names ["AliceBlue"
               "AntiqueWhite"
