@@ -119,7 +119,7 @@
              :title "The Unexpected Chieftain"
              :body "The poker gods are indeed with you this year, as you continue to not only get good cards, but manage to play them correctly for once in your LBP card-playing career.  Roll again unless you are a former or current LBP Chieftain, in which case take another drink and tell us about your worst bad beat ever (or the worst bad beat in your memory of LBP)."}
             {:num 32
-             :title "Chose Your Own Adventure"
+             :title "Choose Your Own Adventure"
              :body "Roll a dice.  If the number's parity matches the current LBP instance parity (e.g., you roll a 3 (which is odd), and it's LBP 17 (also odd)), roll again.  If not, move back a space.  The negative outcome can be countered by telling a tale from LBPs past.  If the tale is entertaining enough (as judged by simple player majority), move forward a space instead of rolling again."}
             {:num 33
              :title "Sweat Shop"
