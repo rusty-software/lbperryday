@@ -87,7 +87,7 @@
              :body "While dropping some mad beatz on the drum machine, Sir Mix-A-Lot bursts through the front door, claiming he heard you riffing and wants to sign you to a record deal.  Lose a turn working out the details of your contract, unless you're playing as Keith, in which case you turn down the deal as you already intend to create your own label (roll again)."}
             {:num 21
              :title "RJ Will Provide"
-             :body "Minding your own business after going all-in pre-flop on 3-7o (and winning on a flop that had a 4, turn of 5, and river of 6), Red Phil challenges you to a One-Step.  It quickly escalates to EVERYONE being challenged to One-Step.  Quickly, quote a unique line from \"No Retreat, No Surrender\" (starting with the current player and going clockwise) to help diffuse the situation.  Anyone failing to do so moves back a space, including Phil."}
+             :body "Minding your own business after going all-in pre-flop on 3-7o (and winning on a flop that had a 4, turn of 5, and river of 6), Red Phil challenges you to a One-Step.  It quickly escalates to EVERYONE being challenged to One-Step.  Quickly, quote a unique line from \"No Retreat, No Surrender\" (going from last place to first, age as tie-breaker) to help diffuse the situation.  Anyone failing to do so moves back a space, including Phil."}
             {:num 22
              :title "Authorship"
              :body "Chase, so caught up in spinning tales of fancy about what's going to happen at LBP, doesn't realize that it's going on RIGHT NOW.  If you're playing as Chase, lose a turn finishing up your first draft of \"LBP: Untold Tales of Wanton Hedonism,\" unless you were one of the first five people here, in which  case take another drink and roll again."}
@@ -168,6 +168,27 @@
              :body "Summarize the context for the title of this card.  Demonstrate the nice moves associated with it.  Say the appropriate line while demonstrating.  Judgement (by simple majority) of the entertainment value of the actions determines whether or not you get to roll again."}
             {:num 48
              :title "Witch's Brew"
-             :body "Instead of the Vitamix, Tony arrives at LBP with a large cauldron.  \"You guys'll love this!\" he exclaims as he proceeds to mix liquors from various unmarked bottles.  Tony dips you a flagon's worth, and you drink.  Roll the dice.  On a 1, 2, or 3, nothing happens.  On a 4, you curse the leader (including ties), moving them back a space.  On a 5, the leader moves back to the first space of identical color.  On a 6, you immediately pass out and lose a turn."}
+             :body "Instead of the Vitamix, Tony arrives at LBP with a large cauldron.  \"You guys'll love this!\" he exclaims as he proceeds to mix liquors from various unmarked bottles.  Tony dips you a flagon's worth, and you drink.  Roll the dice.  On a 1, 2, or 3, nothing happens.  On a 4, you curse the leader (including ties), moving them back a space.  On a 5, the leader moves back to the nearest space of identical color.  On a 6, you immediately pass out and lose a turn."}
+            {:num 49
+             :title "Galveston Spa Day"
+             :body "Dim light illumates the bath downstairs at the Galveston Spa. The tub is steaming slightly, with bubbles frothing over the edge. You climb in, blissfully unaware that the bubbles are from the backup of raw sewage due to the recent flooding. Lose a turn as you notice your skin starting to wear away in sections (thanks, flesh-eating bacteria!). Roll again if you brought antibiotics with you."}
+            {:num 50
+             :title "Tubing Troubles"
+             :body "\"It's the only floaty they had!\" yells Cap'n Keith as the pontoon's engine roars to life. Unfortunately, you haven't situated yourself on said tube as it's jerked forward at 40 knots. Your butt and arms slip through the hole, pinning you in the center of the tube as it flies haphazardly across the lake. Lose a turn trying to free yourself before you drown. Roll (and drink) again if you have never tubed at LBP."}
+            {:num 51
+             :title "Parking Shell Game"
+             :body "\"Only 4 cars can be in the driveway and no parking on the street allowed!\" screams the neighborhood watch as you pull into LBP. Tony rushes out to confirm the rule and pleads with you to either kill him or help him rotate the cars in and out so that there aren't more than 4 parked at a time. Lose a turn if you drove to LBP and weren't one of the first four cars here. Drink and roll again if you're too drunk to take a turn in the shell game."}
+            {:num 52
+             :title "Carpool Conundrum"
+             :body "There are multiple carpools leaving from your vicinity, and they all mistakenly believe that you will be going along with one of the other ones. Lose a turn getting an Uber to take you all the way from your house to LBP.  Roll (and drink) again if you really did carpool and didn't forget anyone."}
+            {:num 53
+             :title "Better With Age"
+             :body "Age has its benefits. One of them is that you are looked up to as an elder statesman of LBP. Roll (and drink) again if you are the oldest person playing this game. As an extra bonus, you may choose to allow the youngest player to move forward a space. The youngest player may not win by performing this action."}
+            {:num 54
+             :title "Youth and Beauty"
+             :body "Youth has its benefits. One of them is that you have more energy and stamina than the old farts surrounding you. Can you believe they think you look up to them?! Idiots! Roll (and drink) again if you're the youngest person playing this game. As an extra bonus, you may choose to allow the oldest player to move forward a space. The oldest player may not win by performing this action."}
+            {:num 55
+             :title "LARP FTW"
+             :body "Chase has threatened to bring some kind of table top roll-playing game to LBP, but you've decided to one-up him this year. Lose a turn organizing a Live Action Roll Play and convincing everyone that it will be \"cool\" and \"not nearly as nerdy as it sounds\". Roll (and drink) again while regailing the players of tales of conquest if you've every actually participated in a LARP."}
             ])
 
