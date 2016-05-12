@@ -1,3 +1,4 @@
+git pull origin master
 lein do clean, cljsbuild once min
 cp resources/public/js/compiled/lbperryday.js js/compiled/
 cp resources/public/css/* css/
