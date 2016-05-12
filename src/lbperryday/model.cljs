@@ -207,9 +207,10 @@
                    traps))))
 
 (defn spring-trap [game-state {:keys [trap-card] :as trap}]
-  (assoc game-state :discard-pile (conj (:discard-pile game-state) {:title (:title trap-card) :body (:body trap-card)})
-                    :show-card? true
-                    :booty-traps (remove #{trap} (:booty-traps game-state))))
+  (let [{:keys [card-style title body]} trap-card]
+    (assoc game-state :discard-pile (conj (:discard-pile game-state) {:card-style card-style :title title :body body})
+                      :show-card? true
+                      :booty-traps (remove #{trap} (:booty-traps game-state)))))
 
 (defn spring-trap! [trap]
   (swap! app-state spring-trap trap))

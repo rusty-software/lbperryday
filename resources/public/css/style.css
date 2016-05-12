@@ -34,6 +34,23 @@ h1 {
   padding: 5px;
   background: Ivory;
 }
+.booty {
+  font-family: "Roboto Slab";
+  font-size: medium;
+  border: 1px solid;
+  margin: 5px;
+  padding: 5px;
+  background: LightGreen;
+}
+.trap {
+  font-family: "Roboto Slab";
+  font-size: medium;
+  border: 1px solid;
+  margin: 5px;
+  padding: 5px;
+  background: IndianRed;
+}
+
 #dice-roll-area {
   position: absolute;
   top: 470px;

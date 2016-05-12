@@ -165,7 +165,10 @@
        (let [current-card (peek (:discard-pile @model/app-state))]
          [:div
           {:id "card-area"
-           :class (str "card-area" (showing-card) )}
+           :class (str (if (:card-style current-card)
+                         (:card-style current-card)
+                         "card-area")
+                    (showing-card))}
           [:h3
            (:title current-card)]
           (when (:body current-card)

@@ -6,22 +6,28 @@
 (def victory-card {:title "SWEET, SWEET VICTORY!"
                    :body "Congratulations %s!  You've achieved LBP Nirvana!  Rub it in the faces of your less fortunate compatriots, and perhaps grab them another beverage."})
 
-(def trap-cards [{:audio :scream
+(def trap-cards [{:card-style "trap"
+                  :audio :scream
                   :title "Darkened Missteps"
                   :body "You've joked about diving from the deck into the pool two stories below, but no one would have expected that you would accidentally step off of the ledge backward, tumbling down the rock cliff face, all because you thought there was a solid step there.  Lose a turn while Sam sutures your back wound and sprays it with antibiotic whiskey."}
-                 {:audio :snoring
+                 {:card-style "trap"
+                  :audio :snoring
                   :title "Early To Bed..."
                   :body "Too many Nutter Butters, beef, and beer (and honestly, it was mostly the beer) have combined to give you major sleepy head.  You have passed out early and must lose a turn!  Everyone else MUST DRINK (and optionally snack) or move back a space."}
-                 {:audio :rooster
+                 {:card-style "booty"
+                  :audio :rooster
                   :title "...Early To Rise"
                   :body "Thanks to your overindulgence in Nutter Butters, beef, and beer last night, you were first to fall asleep/pass out.  As a consequence, you were the first to awaken.  Feel free to move forward a space while everyone else sleeps it off.  Everyone else MUST NOT DRINK until their next turn."}
-                 {:audio :power-down
+                 {:card-style "trap"
+                  :audio :power-down
                   :title "Power Outage"
                   :body "Apparently the owner of the current pimpy LBP abode forgot to pay the electric bill.  Whoever is in first place (including ties) must move back a space while looking for flashlights and beer.  The last place players (including ties) use this opportunity to cheat ahead a space."}
-                 {:audio :free-pass
+                 {:card-style "booty"
+                  :audio :free-pass
                   :title "Free Pass"
                   :body "You've picked up a free pass!  One time only from here forward, you may ignore a card you've drawn."}
-                 {:audio :splash
+                 {:card-style "trap"
+                  :audio :splash
                   :title "Pool Of Dreams"
                   :body "It's been a LONG time since you've relaxed, much less relaxed while drinking a beer and eating Nutter Butters floating astride a series of strangely phallic pool floaties.  You doze off, and are only startled back to wakefulness when someone yells \"WHAT... are you doing?\"  Lose a turn explaining your mild sunburn and unexpected erection."}])
 
