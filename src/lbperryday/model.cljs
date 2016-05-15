@@ -86,6 +86,7 @@
   (let [spaces (generate-spaces)
         traps (generate-booty-traps (vec (take (min 6 (count cards/trap-cards)) (shuffle (butlast spaces)))))]
     {:current-dice (first dice/dice-specs)
+     :history '()
      :roll-history '()
      :add-player-name nil
      :players []
@@ -120,6 +121,7 @@
   (let [roll (rand-int 6)]
     (assoc game-state :current-dice (get dice/dice-specs roll)
                       :roll-history (take 3 (conj (:roll-history game-state) (roll-history-row roll))))))
+
 (defn roll-dice! []
   (swap! app-state roll-dice))
 
@@ -142,7 +144,7 @@
 (defn initial-dot-data-map [players]
   (loop [dot-data {}
          dots players
-         x 650
+         x 640
          y 20]
     (if (empty? dots)
       dot-data
@@ -150,13 +152,26 @@
 
 (defn initial-state [game-state]
   (let [new-game-state (assoc game-state :game-on? true
-                      :player-cycle (player-queue (:players game-state))
-                      :player-data (initial-player-data-map (:players game-state))
-                      :dot-data (initial-dot-data-map (:players game-state)))]
+                                         :player-cycle (player-queue (:players game-state))
+                                         :player-data (initial-player-data-map (:players game-state))
+                                         :dot-data (initial-dot-data-map (:players game-state)))]
     new-game-state))
 
+(defmulti record-history (fn [event-type game-data] event-type))
+
+(defmethod record-history :start-game [_ game-state]
+  (println "recording start game" game-state)
+  game-state)
+
+(defmethod record-history :default [_ game-state]
+  (println "no history recorded for default events")
+  game-state)
+
 (defn start-game! []
-  (swap! app-state initial-state))
+  (->> @app-state
+       (initial-state)
+       (record-history :start-game)
+       (reset! app-state)))
 
 (defn add-player [game-state]
   (assoc game-state :players (conj (:players game-state) (:add-player-name game-state))
@@ -240,5 +255,11 @@
       (let [bcr (get-bcr svg-root)
             updated-dot-data (move-dot dot-data bcr x y)]
         (swap! app-state assoc-in [:dot-data name] updated-dot-data)))))
+
+(defn toggle-history [game-state]
+  (assoc game-state :show-history (not (:show-history game-state))))
+
+(defn toggle-history! []
+  (swap! app-state toggle-history))
 
 
