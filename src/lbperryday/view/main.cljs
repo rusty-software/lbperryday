@@ -5,7 +5,6 @@
             [lbperryday.view.components :as components]
             [lbperryday.model :as model]))
 
-
 (defn display-booty-trap! [name x y]
   (let [trap (model/trap-at x y)]
     (.play (.getElementById js/document (get-in components/audio-snippets [(get-in trap [:trap-card :audio]) :name])))
@@ -47,10 +46,17 @@
   (fn [x y]
     (cond
       (lbp-nirvana? x y)
-      (model/end-game! name)
+      (do
+        (model/record-history :move-name @model/app-state (model/space-at x y))
+        (model/end-game! name))
 
       (has-booty-trap? x y)
-      (display-booty-trap! name x y)
+      (do
+        (model/record-history :move-name @model/app-state (model/space-at x y))
+        (display-booty-trap! name x y))
+
+      (model/space-at x y)
+      (model/record-history! :move-name @model/app-state (model/space-at x y))
 
       :else
       nil)))
@@ -101,99 +107,124 @@
   (for [audio-key (keys components/audio-snippets)]
     (embed-audio (audio-key components/audio-snippets))))
 
+(defn init-players []
+  [:div
+   {:id "gather-players"
+    :class (hidden-during-game)}
+   [:div
+    {:id "player-inputs"}
+    [:input
+     {:id "txt-player-name"
+      :style {:margin-right 2}
+      :type "text"
+      :value (:add-player-name @model/app-state)
+      :on-change #(model/update-player-name! (-> % .-target .-value))}]
+    [:button
+     {:id "btn-add-player"
+      :style {:margin-right 2}
+      :on-click #(model/add-player!)}
+     "Add Player"]
+    [:button
+     {:id "btn-start"
+      :on-click #(model/start-game!)}
+     "Start The Game!"]]
+   [:div
+    {:id "player-list"}
+    (for [player (:players @model/app-state)]
+      (do
+        ^{:key player}
+        [:div
+         player]))]])
+
+(defn dice-area []
+  [:div
+      [:div
+       {:id "dice-roll-area"
+        :on-click #(model/roll-dice!)}
+       [:div
+        {:id "dice-cube"
+         :style {:transform (str " rotateX("
+                              (current-dice-transform :rx)
+                              "deg) rotateY("
+                              (current-dice-transform :ry)
+                              "deg) rotateZ("
+                              (current-dice-transform :rz)
+                              "deg)")}}
+        (for [side-spec dice/dice-specs]
+          (dice/dice-side side-spec))]]
+      [:div
+       {:id "dice-result"}
+       (for [roll (:roll-history @model/app-state)]
+         (do
+           ^{:key (str roll (rand-int 10000000))}
+           [:div
+            roll]))]])
+
+(defn player-area []
+  [:div
+     {:id "play-area"
+      :class (shown-during-game)}
+     [:div
+      {:id "play-buttons"}
+      [:div
+       [:button
+        {:id "btn-draw-card"
+         :on-click #(model/draw-card!)}
+        "Draw Card"]
+       [:button
+        {:id "btn-end-turn"
+         :on-click #(model/next-player!)}
+        "End Turn"]
+       [:button
+        {:id "btn-end-game"
+         :class "red-button"
+         :on-click #(model/reset-game!)}
+        (if (:show-victory? @model/app-state)
+          "End Game"
+          "Give Up!")]
+       [:button
+        {:id "btn-history"
+         :on-click #(model/toggle-history!)}
+        "history"]]
+      [:div
+       {:id "short-instruction-area"
+        :class (str (shown-during-game))}
+       (str (model/current-player) ": Roll, then Draw.")]
+      (let [current-card (peek (:discard-pile @model/app-state))]
+        [:div
+         {:id "card-area"
+          :class (str (if (:card-style current-card)
+                        (:card-style current-card)
+                        "card-area")
+                   (showing-card))}
+         [:h3
+          (:title current-card)]
+         (when (:body current-card)
+           (str/replace (:body current-card) #"%s" (:victor @model/app-state)))])]
+
+   (dice-area)])
+
+(defn data-area []
+  [:div
+   {:class "data-area"}
+   [:center
+    [:h1 "LBPErryDay!"]
+    (init-players)
+    (player-area)]])
+
+(defn history-area []
+  [:div
+   {:class (str "history-area" (when-not (:show-history @model/app-state) " hidden"))}
+   (for [history (:history @model/app-state)]
+         (do
+           ^{:key (str history (rand-int 10000000))}
+           [:div
+            history]))])
+
 (defn play-area []
   [:div
-   (game-board)
    (embedded-snippets)
-   [:div
-    {:class "data-area"}
-    [:center
-     [:h1 "LBPErryDay!"]
-     [:div
-      {:id "gather-players"
-       :class (hidden-during-game)}
-      [:div
-       {:id "player-inputs"}
-       [:input
-        {:id "txt-player-name"
-         :style {:margin-right 2}
-         :type "text"
-         :value (:add-player-name @model/app-state)
-         :on-change #(model/update-player-name! (-> % .-target .-value))}]
-       [:button
-        {:id "btn-add-player"
-         :style {:margin-right 2}
-         :on-click #(model/add-player!)}
-        "Add Player"]
-       [:button
-        {:id "btn-start"
-         :on-click #(model/start-game!)}
-        "Start The Game!"]]
-      [:div
-       {:id "player-list"}
-       (for [player (:players @model/app-state)]
-         (do
-           ^{:key player}
-           [:div
-            player]))]]
-
-     [:div
-      {:id "play-area"
-       :class (shown-during-game)}
-      [:div
-       {:id "play-buttons"}
-       [:div
-        [:button
-         {:id "btn-draw-card"
-          :on-click #(model/draw-card!)}
-         "Draw Card"]
-        [:button
-         {:id "btn-end-turn"
-          :on-click #(model/next-player!)}
-         "End Turn"]
-        [:button
-         {:id "btn-end-game"
-          :class "red-button"
-          :on-click #(model/reset-game!)}
-         (if (:show-victory? @model/app-state)
-           "End Game"
-           "Give Up!")]]
-       [:div
-        {:id "short-instruction-area"
-         :class (str (shown-during-game))}
-        (str (model/current-player) ": Roll, then Draw.")]
-       (let [current-card (peek (:discard-pile @model/app-state))]
-         [:div
-          {:id "card-area"
-           :class (str (if (:card-style current-card)
-                         (:card-style current-card)
-                         "card-area")
-                    (showing-card))}
-          [:h3
-           (:title current-card)]
-          (when (:body current-card)
-            (str/replace (:body current-card) #"%s" (:victor @model/app-state)))])]
-
-      [:div
-       [:div
-        {:id "dice-roll-area"
-         :on-click #(model/roll-dice!)}
-        [:div
-         {:id "dice-cube"
-          :style {:transform (str " rotateX("
-                                  (current-dice-transform :rx)
-                                  "deg) rotateY("
-                                  (current-dice-transform :ry)
-                                  "deg) rotateZ("
-                                  (current-dice-transform :rz)
-                                  "deg)")}}
-         (for [side-spec dice/dice-specs]
-           (dice/dice-side side-spec))]]
-       [:div
-        {:id "dice-result"}
-        (for [roll (:roll-history @model/app-state)]
-          (do
-            ^{:key (str roll (rand-int 10000000))}
-            [:div
-             roll]))]]]]]])
+   (game-board)
+   (data-area)
+   (history-area)])
 

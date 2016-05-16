@@ -13,18 +13,35 @@ h1 {
   -webkit-margin-before: 0.2em;
   -webkit-margin-after: 0.2em;
 }
+.shown-block {
+  display: block;
+}
+.shown-inline {
+  display: inline;
+}
 .hidden {
   display: none;
 }
 .board-area {
   position: absolute;
   width: 900px;
-  height: 600px;
+  height: 640px;
 }
 .data-area {
   position: absolute;
   left: 910px;
   width: 380px;
+}
+.history-area {
+  position: absolute;
+  height: 630px;
+  overflow-y: auto;
+  padding: 5px;
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid #ededed;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: small;
 }
 .card-area {
   font-family: "Roboto Slab";

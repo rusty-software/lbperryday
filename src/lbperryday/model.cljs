@@ -64,7 +64,8 @@
           colors (vec (take n (cycle (shuffle colors/space-colors))))]
       (for [i (range (count spiral-positions))]
         (let [space (get spiral-positions i)]
-          (assoc space :color (get colors i)
+          (assoc space :i i
+                       :color (get colors i)
                        :low-x (:x space)
                        :high-x (+ 125 (:x space))
                        :low-y (:y space)
@@ -86,6 +87,7 @@
   (let [spaces (generate-spaces)
         traps (generate-booty-traps (vec (take (min 6 (count cards/trap-cards)) (shuffle (butlast spaces)))))]
     {:current-dice (first dice/dice-specs)
+     :history '()
      :roll-history '()
      :add-player-name nil
      :players []
@@ -103,25 +105,77 @@
 
 (defonce app-state (reagent/atom (initialize-game-state)))
 
+(defn space-at [x y]
+  (first (filter
+           (fn [space]
+             (and
+               (<= (:low-x space) x (:high-x space))
+               (<= (:low-y space) y (:high-y space))))
+           (:board-spaces @app-state))))
+
 (defn reset-game [_]
   (initialize-game-state))
 
 (defn reset-game! []
   (swap! app-state reset-game))
 
+(def event-type-desc {:start-game " started the game"
+                      :roll-dice " rolled: "
+                      :draw-card " drew: "
+                      :spring-trap " sprung trap: "
+                      :end-turn " ended the turn"
+                      :move-name " moved to space: "})
+
+(defn append-history
+  ([game-state event-type val]
+   (assoc game-state :history (conj (:history game-state) (str (first (:player-cycle game-state)) (event-type event-type-desc) val))))
+  ([game-state event-type]
+   (append-history game-state event-type nil)))
+
+(defmulti record-history (fn [event-type game-data & more] event-type))
+
+(defmethod record-history :start-game [event-type game-state]
+  (append-history game-state event-type))
+
+(defmethod record-history :roll-dice [event-type game-state]
+  (append-history game-state event-type (get-in game-state [:current-dice :val])))
+
+(defmethod record-history :draw-card [event-type game-state]
+  (let [current-card (peek (:discard-pile game-state))]
+    (append-history game-state event-type (:title current-card))))
+
+(defmethod record-history :spring-trap [event-type game-state {:keys [trap-card] :as trap}]
+  (append-history game-state event-type (:title trap-card)))
+
+(defmethod record-history :move-name [event-type game-state space]
+  (println "space" space)
+  (append-history game-state event-type (:i space)))
+
+(defmethod record-history :default [_ game-state]
+  (println "no history recorded for default events")
+  game-state)
+
+(defn record-history! [event-type game-state & more]
+  (let [updated-state (record-history event-type game-state (first more))]
+    (reset! app-state updated-state)))
+
 (defn current-player []
-  (first (:player-cycle @app-state)))
+  (or (first (:player-cycle @app-state))
+      "you"))
 
 (defn roll-history-row [roll]
-  (let [current-player (or (current-player) "you")]
-    (str current-player " just rolled a " (inc roll))))
+  (str (current-player) " just rolled a " (inc roll)))
 
 (defn roll-dice [game-state]
   (let [roll (rand-int 6)]
     (assoc game-state :current-dice (get dice/dice-specs roll)
                       :roll-history (take 3 (conj (:roll-history game-state) (roll-history-row roll))))))
+
 (defn roll-dice! []
-  (swap! app-state roll-dice))
+  (->> @app-state
+       (roll-dice)
+       (record-history :roll-dice)
+       (reset! app-state)))
 
 (defn update-player-name! [name]
   (swap! app-state assoc :add-player-name name))
@@ -142,7 +196,7 @@
 (defn initial-dot-data-map [players]
   (loop [dot-data {}
          dots players
-         x 650
+         x 640
          y 20]
     (if (empty? dots)
       dot-data
@@ -150,13 +204,17 @@
 
 (defn initial-state [game-state]
   (let [new-game-state (assoc game-state :game-on? true
-                      :player-cycle (player-queue (:players game-state))
-                      :player-data (initial-player-data-map (:players game-state))
-                      :dot-data (initial-dot-data-map (:players game-state)))]
+                                         :player-cycle (player-queue (:players game-state))
+                                         :player-data (initial-player-data-map (:players game-state))
+                                         :dot-data (initial-dot-data-map (:players game-state)))]
     new-game-state))
 
+
 (defn start-game! []
-  (swap! app-state initial-state))
+  (->> @app-state
+       (initial-state)
+       (record-history :start-game)
+       (reset! app-state)))
 
 (defn add-player [game-state]
   (assoc game-state :players (conj (:players game-state) (:add-player-name game-state))
@@ -175,6 +233,7 @@
                       :show-card? false)))
 
 (defn next-player! []
+  (swap! app-state append-history :end-turn)
   (swap! app-state next-player))
 
 (defn draw-card [game-state]
@@ -187,7 +246,10 @@
     (assoc game-state :discard-pile (conj (:discard-pile game-state) cards/no-more-cards))))
 
 (defn draw-card! []
-  (swap! app-state draw-card))
+  (->> @app-state
+       (draw-card)
+       (record-history :draw-card)
+       (reset! app-state)))
 
 (defn end-game [game-state name]
   (assoc game-state :players []
@@ -213,11 +275,19 @@
                       :booty-traps (remove #{trap} (:booty-traps game-state)))))
 
 (defn spring-trap! [trap]
-  (swap! app-state spring-trap trap))
+  (let [game-state (spring-trap @app-state trap)
+        game-state (record-history :spring-trap game-state trap)]
+    (reset! app-state game-state)))
+
+(defn about-y [y bcr]
+  (+ 8 (- y (.-top bcr))))
+
+(defn about-x [x bcr]
+  (- x 20 (.-left bcr)))
 
 (defn move-player-name [player-data bcr x y]
-  ;; Approximat offsets for clicking in the middle of a name
-  (assoc player-data :x (- x 20 (.-left bcr)) :y (+ 8 (- y (.-top bcr)))))
+  ;; Approximate offsets for clicking in the middle of a name
+  (assoc player-data :x (about-x x bcr) :y (about-y y bcr)))
 
 (defn get-bcr [svg-root]
   (-> svg-root
@@ -228,8 +298,9 @@
   (let [player-data (get-in @app-state [:player-data name])]
     (fn [x y]
       (let [bcr (get-bcr svg-root)
-            updated-player-data (move-player-name player-data bcr x y)]
-        (swap! app-state assoc-in [:player-data name] updated-player-data)))))
+            updated-player-data (move-player-name player-data bcr x y)
+            updated-game-state (assoc-in @app-state [:player-data name] updated-player-data)]
+        (reset! app-state updated-game-state)))))
 
 (defn move-dot [dot-data bcr x y]
   (assoc dot-data :x (- x (.-left bcr)) :y (- y (.-top bcr))))
@@ -240,5 +311,11 @@
       (let [bcr (get-bcr svg-root)
             updated-dot-data (move-dot dot-data bcr x y)]
         (swap! app-state assoc-in [:dot-data name] updated-dot-data)))))
+
+(defn toggle-history [game-state]
+  (assoc game-state :show-history (not (:show-history game-state))))
+
+(defn toggle-history! []
+  (swap! app-state toggle-history))
 
 
