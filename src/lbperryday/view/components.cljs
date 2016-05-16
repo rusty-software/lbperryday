@@ -6,7 +6,7 @@
                    "img/brisket.png"
                    "img/card.png"
                    "img/cheetos.png"
-                   "img/chief.png"
+                   "img/chief2.png"
                    "img/drum.jpg"
                    "img/guac.png"
                    "img/pontoon.png"

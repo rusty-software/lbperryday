@@ -208,7 +208,11 @@
 (defn history-area []
   [:div
    {:class (str "history-area" (when-not (:show-history @model/app-state) " hidden"))}
-   "hello"])
+   (for [history (:history @model/app-state)]
+         (do
+           ^{:key (str history (rand-int 10000000))}
+           [:div
+            history]))])
 
 (defn play-area []
   [:div

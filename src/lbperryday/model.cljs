@@ -110,12 +110,38 @@
 (defn reset-game! []
   (swap! app-state reset-game))
 
+(def event-type-desc {:start-game " started the game"
+                      :roll-dice " rolled a "
+                      :draw-card " drew "})
+
+(defn append-history
+  ([game-state event-type val]
+   (assoc game-state :history (conj (:history game-state) (str (first (:player-cycle game-state)) (event-type event-type-desc) val))))
+  ([game-state action]
+   (append-history game-state action nil)))
+
+(defmulti record-history (fn [event-type game-data] event-type))
+
+(defmethod record-history :start-game [event-type game-state]
+  (append-history game-state event-type))
+
+(defmethod record-history :roll-dice [event-type game-state]
+  (append-history game-state event-type (get-in game-state [:current-dice :val])))
+
+(defmethod record-history :draw-card [event-type game-state]
+  (let [current-card (peek (:discard-pile game-state))]
+    (append-history game-state event-type (:title current-card))))
+
+(defmethod record-history :default [_ game-state]
+  (println "no history recorded for default events")
+  game-state)
+
 (defn current-player []
-  (first (:player-cycle @app-state)))
+  (or (first (:player-cycle @app-state))
+      "you"))
 
 (defn roll-history-row [roll]
-  (let [current-player (or (current-player) "you")]
-    (str current-player " just rolled a " (inc roll))))
+  (str (current-player) " just rolled a " (inc roll)))
 
 (defn roll-dice [game-state]
   (let [roll (rand-int 6)]
@@ -123,7 +149,10 @@
                       :roll-history (take 3 (conj (:roll-history game-state) (roll-history-row roll))))))
 
 (defn roll-dice! []
-  (swap! app-state roll-dice))
+  (->> @app-state
+       (roll-dice)
+       (record-history :roll-dice)
+       (reset! app-state)))
 
 (defn update-player-name! [name]
   (swap! app-state assoc :add-player-name name))
@@ -157,15 +186,6 @@
                                          :dot-data (initial-dot-data-map (:players game-state)))]
     new-game-state))
 
-(defmulti record-history (fn [event-type game-data] event-type))
-
-(defmethod record-history :start-game [_ game-state]
-  (println "recording start game" game-state)
-  game-state)
-
-(defmethod record-history :default [_ game-state]
-  (println "no history recorded for default events")
-  game-state)
 
 (defn start-game! []
   (->> @app-state
@@ -202,7 +222,10 @@
     (assoc game-state :discard-pile (conj (:discard-pile game-state) cards/no-more-cards))))
 
 (defn draw-card! []
-  (swap! app-state draw-card))
+  (->> @app-state
+       (draw-card)
+       (record-history :draw-card)
+       (reset! app-state)))
 
 (defn end-game [game-state name]
   (assoc game-state :players []

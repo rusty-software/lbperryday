@@ -33,11 +33,13 @@ h1 {
   width: 380px;
 }
 .history-area {
-  background: rgba(255, 255, 255, 0.3);
+  position: absolute;
+  height: 640px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.75);
   border: 1px solid #ededed;
   border-collapse: collapse;
   border-spacing: 0;
-  position: absolute;
   font-size: small;
 }
 .card-area {
