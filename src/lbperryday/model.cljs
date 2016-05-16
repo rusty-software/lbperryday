@@ -64,7 +64,8 @@
           colors (vec (take n (cycle (shuffle colors/space-colors))))]
       (for [i (range (count spiral-positions))]
         (let [space (get spiral-positions i)]
-          (assoc space :color (get colors i)
+          (assoc space :i i
+                       :color (get colors i)
                        :low-x (:x space)
                        :high-x (+ 125 (:x space))
                        :low-y (:y space)
@@ -104,6 +105,14 @@
 
 (defonce app-state (reagent/atom (initialize-game-state)))
 
+(defn space-at [x y]
+  (first (filter
+           (fn [space]
+             (and
+               (<= (:low-x space) x (:high-x space))
+               (<= (:low-y space) y (:high-y space))))
+           (:board-spaces @app-state))))
+
 (defn reset-game [_]
   (initialize-game-state))
 
@@ -114,7 +123,8 @@
                       :roll-dice " rolled: "
                       :draw-card " drew: "
                       :spring-trap " sprung trap: "
-                      :end-turn " ended the turn"})
+                      :end-turn " ended the turn"
+                      :move-name " moved to space: "})
 
 (defn append-history
   ([game-state event-type val]
@@ -137,9 +147,17 @@
 (defmethod record-history :spring-trap [event-type game-state {:keys [trap-card] :as trap}]
   (append-history game-state event-type (:title trap-card)))
 
+(defmethod record-history :move-name [event-type game-state space]
+  (println "space" space)
+  (append-history game-state event-type (:i space)))
+
 (defmethod record-history :default [_ game-state]
   (println "no history recorded for default events")
   game-state)
+
+(defn record-history! [event-type game-state & more]
+  (let [updated-state (record-history event-type game-state (first more))]
+    (reset! app-state updated-state)))
 
 (defn current-player []
   (or (first (:player-cycle @app-state))
@@ -261,9 +279,15 @@
         game-state (record-history :spring-trap game-state trap)]
     (reset! app-state game-state)))
 
+(defn about-y [y bcr]
+  (+ 8 (- y (.-top bcr))))
+
+(defn about-x [x bcr]
+  (- x 20 (.-left bcr)))
+
 (defn move-player-name [player-data bcr x y]
-  ;; Approximat offsets for clicking in the middle of a name
-  (assoc player-data :x (- x 20 (.-left bcr)) :y (+ 8 (- y (.-top bcr)))))
+  ;; Approximate offsets for clicking in the middle of a name
+  (assoc player-data :x (about-x x bcr) :y (about-y y bcr)))
 
 (defn get-bcr [svg-root]
   (-> svg-root
@@ -274,8 +298,9 @@
   (let [player-data (get-in @app-state [:player-data name])]
     (fn [x y]
       (let [bcr (get-bcr svg-root)
-            updated-player-data (move-player-name player-data bcr x y)]
-        (swap! app-state assoc-in [:player-data name] updated-player-data)))))
+            updated-player-data (move-player-name player-data bcr x y)
+            updated-game-state (assoc-in @app-state [:player-data name] updated-player-data)]
+        (reset! app-state updated-game-state)))))
 
 (defn move-dot [dot-data bcr x y]
   (assoc dot-data :x (- x (.-left bcr)) :y (- y (.-top bcr))))

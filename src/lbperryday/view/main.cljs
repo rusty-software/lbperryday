@@ -46,10 +46,17 @@
   (fn [x y]
     (cond
       (lbp-nirvana? x y)
-      (model/end-game! name)
+      (do
+        (model/record-history :move-name @model/app-state (model/space-at x y))
+        (model/end-game! name))
 
       (has-booty-trap? x y)
-      (display-booty-trap! name x y)
+      (do
+        (model/record-history :move-name @model/app-state (model/space-at x y))
+        (display-booty-trap! name x y))
+
+      (model/space-at x y)
+      (model/record-history! :move-name @model/app-state (model/space-at x y))
 
       :else
       nil)))
