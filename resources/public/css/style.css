@@ -34,8 +34,9 @@ h1 {
 }
 .history-area {
   position: absolute;
-  height: 640px;
+  height: 630px;
   overflow-y: auto;
+  padding: 5px;
   background: rgba(255, 255, 255, 0.75);
   border: 1px solid #ededed;
   border-collapse: collapse;

@@ -111,16 +111,18 @@
   (swap! app-state reset-game))
 
 (def event-type-desc {:start-game " started the game"
-                      :roll-dice " rolled a "
-                      :draw-card " drew "})
+                      :roll-dice " rolled: "
+                      :draw-card " drew: "
+                      :spring-trap " sprung trap: "
+                      :end-turn " ended the turn"})
 
 (defn append-history
   ([game-state event-type val]
    (assoc game-state :history (conj (:history game-state) (str (first (:player-cycle game-state)) (event-type event-type-desc) val))))
-  ([game-state action]
-   (append-history game-state action nil)))
+  ([game-state event-type]
+   (append-history game-state event-type nil)))
 
-(defmulti record-history (fn [event-type game-data] event-type))
+(defmulti record-history (fn [event-type game-data & more] event-type))
 
 (defmethod record-history :start-game [event-type game-state]
   (append-history game-state event-type))
@@ -131,6 +133,9 @@
 (defmethod record-history :draw-card [event-type game-state]
   (let [current-card (peek (:discard-pile game-state))]
     (append-history game-state event-type (:title current-card))))
+
+(defmethod record-history :spring-trap [event-type game-state {:keys [trap-card] :as trap}]
+  (append-history game-state event-type (:title trap-card)))
 
 (defmethod record-history :default [_ game-state]
   (println "no history recorded for default events")
@@ -210,6 +215,7 @@
                       :show-card? false)))
 
 (defn next-player! []
+  (swap! app-state append-history :end-turn)
   (swap! app-state next-player))
 
 (defn draw-card [game-state]
@@ -251,7 +257,9 @@
                       :booty-traps (remove #{trap} (:booty-traps game-state)))))
 
 (defn spring-trap! [trap]
-  (swap! app-state spring-trap trap))
+  (let [game-state (spring-trap @app-state trap)
+        game-state (record-history :spring-trap game-state trap)]
+    (reset! app-state game-state)))
 
 (defn move-player-name [player-data bcr x y]
   ;; Approximat offsets for clicking in the middle of a name
