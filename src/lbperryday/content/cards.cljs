@@ -196,5 +196,14 @@
             {:num 55
              :title "LARP FTW"
              :body "Chase has threatened to bring some kind of table top roll-playing game to LBP, but you've decided to one-up him this year. Lose a turn organizing a Live Action Roll Play and convincing everyone that it will be \"cool\" and \"not nearly as nerdy as it sounds\". Roll (and drink) again while regailing the players of tales of conquest if you've every actually participated in a LARP."}
+            {:num 56
+             :title "Me So Lonely"
+             :body "You don't often get lonely at LBP, but when you do, it comes on hard (like Keith).  If you are on a space by yourself, choose another player to join you.  They can come from in front or behind (again, like Keith)."}
+            {:num 57
+             :title "Foreign Entertainment"
+             :body "While messing around on the waterfront behind the LBP Mansion, a band of gypsies rolls up the river and offers to put on a show.  Everyone is immediately entranced by the dancing girls.  Everyone, that is, except you.  Instead, you have your fortune told by an ancient crone.  Roll the dice.  On a 1, 2, or 3, you're given a mundane fortune.  A 4 or 5 reveals that you're going places - move to the space in front of the leader (not including winning).  A 6 means you're doomed!  Lose a turn and drink your sorrows away."}
+           {:num 58
+             :title "Piracy"
+             :body "While tootling around the lake in our underpowered pontoon, the rum goes to Keith's head.  Insisting that we all call him \"Red Beard\", he puts on an eye patch, pins a stuffed parrot to his shoulder, and starts yelling \"yarr!\" and \"shiver me timbers!\" as he opens the throttle up to find other boats and small villages to sack.  If you're playing as anyone but Keith, lose a turn trying to insight a mutiny.  If you're Keith, roll and drink again if you can talk like a pirate for 30 seconds."}
             ])
 
