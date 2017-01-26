@@ -205,5 +205,17 @@
            {:num 58
              :title "Piracy"
              :body "While tootling around the lake in our underpowered pontoon, the rum goes to Keith's head.  Insisting that we all call him \"Red Beard\", he puts on an eye patch, pins a stuffed parrot to his shoulder, and starts yelling \"yarr!\" and \"shiver me timbers!\" as he opens the throttle up to find other boats and small villages to sack.  If you're playing as anyone but Keith, lose a turn trying to insight a mutiny.  If you're Keith, roll and drink again if you can talk like a pirate for 30 seconds."}
+            {:num 59
+             :title "Virtual Reality"
+             :body "Since its introduction at LBP, Virtual Reality has become a big player. So big, in fact, that we have decided to let it join the poker tournament. You have made it to the final versus the machine. Roll a dice. On a 1, 2, or 3, you lose a turn, ceremonially giving the Chieftan to the computer. On a 4, 5, or 6, you win! Pour a drink on the computer and down your throat, and roll again!"}
+            {:num 60
+             :title "The Chief Is Missing!"
+             :body "Oh no! Last year's poker tourney champion has \"forgotten\" to bring the trophy to this year's LBP! Lose a turn brainstorming on what to use as a trophy instead (or, indeed, ordering a backup off of Amazon), unless you won last year's tourney, in which case promise you'll bring it next year while winking because we all know you're lying, take a drink, and roll again."}
+            {:num 61
+             :title "Tepid Pool, No Shade"
+             :body "Even though this year's venue is beautiful, the owners didn't think through their pool placement or shrubbery requirements. As such, by evening on the first day, the pool is a constant 90 degrees F, and everyone that was in it is a candidate for Red Lobster spokesmodel. If you got sunburnt this LBP, lose a turn applying aloe vera, unless you can convince someone to apply it for you, in which case you share a drink and roll again."}
+            {:num 62
+             :title "LBP Blue Balls"
+             :body "For some reason, LBP has been slipping later and later into the summer. If you were one of the people lobbying for a date past Father's Day, lose a turn trying to convince everything that this is somehow better. If you can *actually* convince one other player, take a drink and roll again. Also, console Chase, because his are the achiest."}
             ])
 
