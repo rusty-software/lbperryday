@@ -236,20 +236,7 @@
   (swap! app-state append-history :end-turn)
   (swap! app-state next-player))
 
-(defn draw-card [game-state]
-  (if-let [drawn-card (peek (:draw-pile game-state))]
-    (let [updated-draw-pile (pop (:draw-pile game-state))
-          updated-discard-pile (conj (:discard-pile game-state) drawn-card)]
-      (assoc game-state :draw-pile updated-draw-pile
-                        :discard-pile updated-discard-pile
-                        :show-card? true))
-    (assoc game-state :discard-pile (conj (:discard-pile game-state) cards/no-more-cards))))
 
-(defn draw-card! []
-  (->> @app-state
-       (draw-card)
-       (record-history :draw-card)
-       (reset! app-state)))
 
 (defn end-game [game-state name]
   (assoc game-state :players []
@@ -260,6 +247,23 @@
 (defn end-game! [name]
   (.play (.getElementById js/document (get-in components/audio-snippets [:chief :name])))
   (swap! app-state end-game name))
+
+(defn draw-card [game-state]
+  (if-let [drawn-card (peek (:draw-pile game-state))]
+    (let [updated-draw-pile (pop (:draw-pile game-state))
+          updated-discard-pile (conj (:discard-pile game-state) drawn-card)]
+      (assoc game-state :draw-pile updated-draw-pile
+                        :discard-pile updated-discard-pile
+                        :show-card? true))
+    (do
+      (.play (.getElementById js/document (get-in components/audio-snippets [:chief :name])))
+      (assoc game-state :discard-pile (conj (:discard-pile game-state) cards/no-more-cards)))))
+
+(defn draw-card! []
+  (->> @app-state
+       (draw-card)
+       (record-history :draw-card)
+       (reset! app-state)))
 
 (defn trap-at [x y]
   (let [traps (:booty-traps @app-state)]
