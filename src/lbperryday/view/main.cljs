@@ -83,6 +83,7 @@
       (let [{:keys [x y color]} space]
         (components/board-space x y color)))
     (components/space-image (:final-space-img @model/app-state) (+ 27 (:low-x final-space-bounds)) (:low-y final-space-bounds) 70)
+    #_(components/space-image "img/chief.png" (+ 10 (:low-x final-space-bounds)) (:low-y final-space-bounds) 70)
     (let [root (reagent/current-component)]
       (doall
         (map (fn [[name data]]
