@@ -1,6 +1,6 @@
 # lbperryday
 
-A video game about how to live LBPERRYDAY
+A video game about how to live LBPERRYDAY, for realz, yo!
 
 ## Overview
 
